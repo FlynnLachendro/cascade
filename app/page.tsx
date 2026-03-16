@@ -5,9 +5,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white">
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5">
-        <div className="flex items-center gap-2">
-          <img src="/cascade-logo.png" alt="Cascade" className="h-14 w-14" />
-          <span className="text-base font-bold tracking-tight text-[#1a2332]">
+        <div className="flex items-center gap-3">
+          <img src="/cascade-logo.png" alt="Cascade" className="h-10 w-10" />
+          <span className="text-xl font-bold tracking-tight text-[#1a2332]">
             Cascade
           </span>
         </div>
@@ -21,7 +21,7 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="mx-auto max-w-4xl px-8 pb-24 pt-16 text-center">
-        <img src="/cascade-logo.png" alt="Cascade" className="mx-auto mb-10 h-36 w-36" />
+        <img src="/cascade-logo.png" alt="Cascade" className="mx-auto mb-10 h-44 w-44" />
         <h1 className="text-5xl font-bold leading-[1.1] tracking-tight text-[#1a2332] sm:text-6xl">
           See how one change ripples through your entire GxP system
         </h1>
