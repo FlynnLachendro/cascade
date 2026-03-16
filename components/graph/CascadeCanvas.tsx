@@ -396,7 +396,7 @@ export function CascadeCanvas({
           edgeTypes={edgeTypes}
           defaultEdgeOptions={{ type: "cascade" }}
           fitView
-          fitViewOptions={{ padding: 0.3 }}
+          fitViewOptions={{ padding: 0.15 }}
           deleteKeyCode={["Backspace", "Delete"]}
           className="bg-[#f4f5f7]"
         >

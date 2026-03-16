@@ -25,13 +25,13 @@ interface PredefinedChangeSet {
 // ── Nodes ──
 
 const NODES: TemplateNode[] = [
-  // Process Steps (top row)
+  // Process Steps (top row) — 400px column gap
   {
     id: "ps-washing",
     type: NodeType.PROCESS_STEP,
     label: "Cell Washing",
     description: "Washing step at 4°C using PBS buffer with centrifugation at 300g",
-    positionX: 100,
+    positionX: 0,
     positionY: 0,
   },
   {
@@ -39,7 +39,7 @@ const NODES: TemplateNode[] = [
     type: NodeType.PROCESS_STEP,
     label: "Cell Expansion",
     description: "9-day culture in complete media with IL-2 supplementation",
-    positionX: 450,
+    positionX: 420,
     positionY: 0,
   },
   {
@@ -47,118 +47,112 @@ const NODES: TemplateNode[] = [
     type: NodeType.PROCESS_STEP,
     label: "Cryopreservation",
     description: "Controlled-rate freezing with 10% DMSO cryoprotectant",
-    positionX: 800,
+    positionX: 840,
     positionY: 0,
   },
 
-  // SOPs (second row)
+  // SOPs (second row) — 250px vertical gap
   {
     id: "sop-washing",
     type: NodeType.SOP,
     label: "SOP-0042: Cell Washing Procedure",
     description: "Standard operating procedure for post-isolation cell washing",
-    positionX: 0,
-    positionY: 180,
+    positionX: -60,
+    positionY: 250,
   },
   {
     id: "sop-expansion",
     type: NodeType.SOP,
     label: "SOP-0051: Cell Expansion Protocol",
     description: "Standard operating procedure for T-cell expansion culture",
-    positionX: 400,
-    positionY: 180,
+    positionX: 380,
+    positionY: 250,
   },
   {
     id: "sop-cryo",
     type: NodeType.SOP,
     label: "SOP-0067: Cryopreservation Procedure",
     description: "Standard operating procedure for controlled-rate freezing",
-    positionX: 780,
-    positionY: 180,
+    positionX: 820,
+    positionY: 250,
   },
 
-  // Training Records (third row)
+  // Training Records + Batch Record (third row) — 4 columns spread wide
   {
     id: "tr-a",
     type: NodeType.TRAINING_RECORD,
     label: "TR: Operator A",
     description: "Training certification for Operator A — cell washing & expansion",
-    positionX: 0,
-    positionY: 360,
+    positionX: -100,
+    positionY: 500,
   },
   {
     id: "tr-b",
     type: NodeType.TRAINING_RECORD,
     label: "TR: Operator B",
     description: "Training certification for Operator B — all manufacturing steps",
-    positionX: 250,
-    positionY: 360,
+    positionX: 220,
+    positionY: 500,
+  },
+  {
+    id: "br-template",
+    type: NodeType.BATCH_RECORD,
+    label: "BT-2024-001: Batch Record Template",
+    description: "Master batch record template for CAR-T manufacturing",
+    positionX: 540,
+    positionY: 500,
   },
   {
     id: "tr-c",
     type: NodeType.TRAINING_RECORD,
     label: "TR: Operator C",
     description: "Training certification for Operator C — cryopreservation specialist",
-    positionX: 750,
-    positionY: 360,
+    positionX: 880,
+    positionY: 500,
   },
 
-  // Batch Record (third row, right)
-  {
-    id: "br-template",
-    type: NodeType.BATCH_RECORD,
-    label: "BT-2024-001: Batch Record Template",
-    description: "Master batch record template for CAR-T manufacturing",
-    positionX: 500,
-    positionY: 360,
-  },
-
-  // Equipment (fourth row)
+  // Equipment + Validation (fourth row) — 3 columns
   {
     id: "eq-centrifuge",
     type: NodeType.EQUIPMENT_QUALIFICATION,
     label: "EQ-009: Centrifuge OQ",
     description: "Operational qualification for Beckman Coulter Allegra X-30R centrifuge",
-    positionX: 0,
-    positionY: 540,
+    positionX: -60,
+    positionY: 750,
+  },
+  {
+    id: "vp-process",
+    type: NodeType.VALIDATION_PROTOCOL,
+    label: "VP-015: Process Validation",
+    description: "Process validation protocol for CAR-T cell manufacturing",
+    positionX: 380,
+    positionY: 750,
   },
   {
     id: "eq-freezer",
     type: NodeType.EQUIPMENT_QUALIFICATION,
     label: "EQ-014: CRF Qualification",
     description: "Operational qualification for controlled-rate freezer",
-    positionX: 750,
-    positionY: 540,
+    positionX: 820,
+    positionY: 750,
   },
 
-  // Validation Protocol (fourth row, center)
-  {
-    id: "vp-process",
-    type: NodeType.VALIDATION_PROTOCOL,
-    label: "VP-015: Process Validation",
-    description: "Process validation protocol for CAR-T cell manufacturing",
-    positionX: 350,
-    positionY: 540,
-  },
-
-  // CAPA (fifth row)
+  // CAPA + Regulatory (fifth row) — 2 columns centered
   {
     id: "capa-change",
     type: NodeType.CAPA,
     label: "CAPA-2024-031: Change Tracking",
     description: "Corrective and preventive action for manufacturing process changes",
-    positionX: 100,
-    positionY: 720,
+    positionX: 140,
+    positionY: 1000,
   },
-
-  // Regulatory Submission (fifth row, right)
   {
     id: "reg-ind",
     type: NodeType.REGULATORY_SUBMISSION,
     label: "IND-2024-0012 §3.2.S.2",
     description: "Investigational New Drug application — CMC section for drug substance",
-    positionX: 550,
-    positionY: 720,
+    positionX: 580,
+    positionY: 1000,
   },
 ];
 
