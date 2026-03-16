@@ -34,7 +34,7 @@ Deliberately matches Seal's stack to prove Flynn can work in it.
 | Styling            | Tailwind v4 + Shadcn UI            |
 | Graph              | @xyflow/react (React Flow)         |
 | API Layer          | GraphQL (Apollo Server + Apollo Client) |
-| Database           | Supabase (PostgreSQL + RLS)         |
+| Database           | Turso (LibSQL / SQLite edge)        |
 | LLM                | OpenRouter (Gemini 2.0 Flash)       |
 | Streaming          | Web Streams API (ReadableStream) via Next.js API routes |
 | Package Manager    | pnpm                                |
@@ -46,7 +46,7 @@ Deliberately matches Seal's stack to prove Flynn can work in it.
 - **GraphQL** — Seal uses it. Flynn hasn't used it before. Building with it shows willingness to learn their stack.
 - **Apollo Server/Client** — Most common Node.js GraphQL setup. Runs inside Next.js API route.
 - **React Flow** — Already used successfully in Arbor. Proven for interactive node graphs.
-- **Supabase** — Flynn's standard DB. New project needed (free tier limit is 2, may need Pro upgrade on existing project).
+- **Turso** — Free SQLite-at-the-edge database. Own project, own DB, no Supabase Pro upgrade needed. Works on Vercel serverless via LibSQL client.
 - **Gemini 2.0 Flash via OpenRouter** — Same LLM pattern as Arbor and Lattice. Fast, cheap, good enough for regulatory explanations.
 
 ---
@@ -97,8 +97,8 @@ Cascade/
 │   │   ├── schema.ts               # GraphQL type definitions
 │   │   ├── resolvers.ts            # Query/Mutation resolvers
 │   │   └── client.ts               # Apollo Client setup
-│   ├── supabase/
-│   │   ├── client.ts               # Supabase client init
+│   ├── db/
+│   │   ├── client.ts               # Turso/LibSQL client init
 │   │   └── queries.ts              # DB operations (save/load workflows, simulations)
 │   ├── ai/
 │   │   ├── prompt.ts               # System prompt + regulatory context for LLM
@@ -109,70 +109,70 @@ Cascade/
 │   └── index.ts                    # Shared TypeScript types
 ├── public/
 │   └── og.png                      # OG preview image
-├── .env.local                      # OPENROUTER_API_KEY, SUPABASE_URL, SUPABASE_ANON_KEY
+├── .env.local                      # OPENROUTER_API_KEY, TURSO_DATABASE_URL, TURSO_AUTH_TOKEN
 └── next.config.ts
 ```
 
 ---
 
-## Database Schema (Supabase)
+## Database Schema (Turso / SQLite)
 
 ### Table: `workflows`
 
-| Column       | Type        | Notes                              |
-|-------------|-------------|-------------------------------------|
-| id          | uuid (PK)   | Default gen_random_uuid()          |
-| name        | text        | Workflow name                       |
-| description | text        | Optional description                |
-| created_at  | timestamptz | Default now()                       |
-| updated_at  | timestamptz | Default now()                       |
+| Column       | Type     | Notes                              |
+|-------------|----------|-------------------------------------|
+| id          | text (PK)| UUID generated in application      |
+| name        | text     | Workflow name                       |
+| description | text     | Optional description                |
+| created_at  | text     | ISO 8601 timestamp                  |
+| updated_at  | text     | ISO 8601 timestamp                  |
 
 ### Table: `nodes`
 
-| Column      | Type        | Notes                              |
-|------------|-------------|-------------------------------------|
-| id         | uuid (PK)   | Default gen_random_uuid()          |
-| workflow_id| uuid (FK)   | References workflows.id            |
-| type       | text        | Node type enum value                |
-| label      | text        | Display name                        |
-| description| text        | Node description                    |
-| position_x | float       | Canvas X position                   |
-| position_y | float       | Canvas Y position                   |
-| metadata   | jsonb       | Flexible config (regulatory refs, etc.) |
+| Column      | Type     | Notes                              |
+|------------|----------|-------------------------------------|
+| id         | text (PK)| UUID generated in application      |
+| workflow_id| text (FK)| References workflows.id            |
+| type       | text     | Node type enum value                |
+| label      | text     | Display name                        |
+| description| text     | Node description                    |
+| position_x | real     | Canvas X position                   |
+| position_y | real     | Canvas Y position                   |
+| metadata   | text     | JSON string (flexible config)       |
 
 ### Table: `edges`
 
 | Column          | Type     | Notes                              |
 |----------------|----------|-------------------------------------|
-| id             | uuid (PK)| Default gen_random_uuid()          |
-| workflow_id    | uuid (FK)| References workflows.id            |
-| source_node_id | uuid (FK)| References nodes.id                |
-| target_node_id | uuid (FK)| References nodes.id                |
+| id             | text (PK)| UUID generated in application      |
+| workflow_id    | text (FK)| References workflows.id            |
+| source_node_id | text (FK)| References nodes.id                |
+| target_node_id | text (FK)| References nodes.id                |
 | relationship   | text     | e.g., "governs", "requires", "references" |
 
 ### Table: `simulations`
 
-| Column            | Type        | Notes                           |
-|------------------|-------------|----------------------------------|
-| id               | uuid (PK)   | Default gen_random_uuid()       |
-| workflow_id      | uuid (FK)   | References workflows.id         |
-| trigger_node_id  | uuid (FK)   | The node the change was made to |
-| change_description| text       | What was changed                 |
-| created_at       | timestamptz | Default now()                    |
+| Column            | Type     | Notes                           |
+|------------------|----------|----------------------------------|
+| id               | text (PK)| UUID generated in application   |
+| workflow_id      | text (FK)| References workflows.id         |
+| trigger_node_id  | text     | The node the change was made to |
+| change_description| text    | What was changed                 |
+| created_at       | text     | ISO 8601 timestamp               |
 
 ### Table: `simulation_impacts`
 
 | Column              | Type     | Notes                           |
 |---------------------|----------|----------------------------------|
-| id                  | uuid (PK)| Default gen_random_uuid()       |
-| simulation_id       | uuid (FK)| References simulations.id       |
-| node_id             | uuid (FK)| References nodes.id             |
+| id                  | text (PK)| UUID generated in application   |
+| simulation_id       | text (FK)| References simulations.id       |
+| node_id             | text     | References nodes.id             |
 | severity            | text     | critical / high / medium / low  |
 | ai_explanation      | text     | LLM-generated explanation       |
 | regulation_reference| text     | e.g., "21 CFR 211.186"         |
 | recommended_action  | text     | What to do about it             |
 
-No RLS needed — no auth, public read/write.
+No auth — public demo app.
 
 ---
 
@@ -451,8 +451,8 @@ The cascade simulation with AI streaming does NOT go through GraphQL — it uses
 ## Environment Variables
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+TURSO_DATABASE_URL=            # libsql://your-db-name-your-org.turso.io
+TURSO_AUTH_TOKEN=              # Turso auth token
 OPENROUTER_API_KEY=
 NEXT_PUBLIC_APP_URL=           # For shareable URLs and OG tags
 ```
@@ -463,7 +463,7 @@ NEXT_PUBLIC_APP_URL=           # For shareable URLs and OG tags
 
 - **Vercel:** Connect GitHub repo, auto-deploy from main
 - **Custom domain:** Porkbun DNS → Vercel
-- **Supabase:** New project (requires Pro upgrade on an existing project to unlock 3rd)
+- **Turso:** Free tier database (create at turso.tech, run migration)
 - **No CI/CD, no tests, no analytics, no error tracking** — pure demo
 
 ---
@@ -640,7 +640,7 @@ Every flow below is written as a step-by-step sequence with expected outcomes. T
 | Step | Action | Expected Result |
 |------|--------|-----------------|
 | 11.1 | Locate "Share" button | Button visible in toolbar/header |
-| 11.2 | Click "Share" | Workflow is saved to Supabase. A shareable URL is generated (e.g., `cascade.dev/w/abc123`). URL is displayed in a modal/toast with a "Copy" button |
+| 11.2 | Click "Share" | Workflow is saved to Turso DB. A shareable URL is generated (e.g., `cascade.dev/w/abc123`). URL is displayed in a modal/toast with a "Copy" button |
 | 11.3 | Click "Copy" | URL copied to clipboard. Visual confirmation (toast or button text change) |
 | 11.4 | Open the shareable URL in a new tab | The workflow loads with all nodes, edges, and positions exactly as saved. If a simulation was run before sharing, the simulation results are also visible |
 

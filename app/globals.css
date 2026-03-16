@@ -127,3 +127,19 @@
     @apply font-sans;
   }
 }
+
+/* Cascade edge animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* React Flow overrides */
+.react-flow__controls button {
+  border-color: #e2e8f0 !important;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}

@@ -1,0 +1,25 @@
+"use client";
+
+export function MobileBlock() {
+  return (
+    <div className="fixed inset-0 z-50 flex min-h-screen flex-col items-center justify-center bg-white px-8 text-center md:hidden">
+      <div className="mb-6 text-4xl">🖥️</div>
+      <h1 className="mb-3 text-xl font-bold tracking-tight text-slate-900">
+        Desktop Only
+      </h1>
+      <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-500">
+        Cascade is an interactive graph tool built for desktop. Please visit on
+        a larger screen to explore regulated workflow simulations.
+      </p>
+      <p className="text-xs text-slate-400">
+        Built by{" "}
+        <a
+          href="https://www.linkedin.com/in/flynnlachendro/"
+          className="underline underline-offset-2 hover:text-slate-600"
+        >
+          Flynn Lachendro
+        </a>
+      </p>
+    </div>
+  );
+}
