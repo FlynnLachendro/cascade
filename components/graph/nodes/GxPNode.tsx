@@ -4,6 +4,7 @@ import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { NODE_CONFIGS, SEVERITY_COLORS, NodeType, type Severity } from "@/types";
 import { cn } from "@/lib/utils";
+import { NodeIcon } from "../NodeIcon";
 
 export interface GxPNodeData {
   label: string;
@@ -49,7 +50,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
       />
 
       <div className="flex items-start gap-2">
-        <span className="mt-0.5 text-[10px] leading-none" style={{ color: "#5a6577" }}>{config.icon}</span>
+        <NodeIcon type={data.nodeType} className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#5a6577]" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span

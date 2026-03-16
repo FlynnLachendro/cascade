@@ -1,6 +1,7 @@
 "use client";
 
 import { NODE_CONFIGS, NodeType } from "@/types";
+import { NodeIcon } from "./NodeIcon";
 
 const nodeTypes = Object.values(NodeType);
 
@@ -29,7 +30,7 @@ export function NodeSidebar() {
               className="flex cursor-grab items-center gap-2 rounded-md border border-[#e2e6ea] bg-white px-2.5 py-2 text-sm transition-colors hover:border-[#c8cdd4] hover:bg-[#f9fafb] active:cursor-grabbing"
               style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2 }}
             >
-              <span className="text-[10px]" style={{ color: "#5a6577" }}>{config.icon}</span>
+              <NodeIcon type={type} className="h-3.5 w-3.5 text-[#5a6577]" />
               <span className="text-xs font-medium text-[#1a2332]">
                 {config.label}
               </span>

@@ -8,7 +8,13 @@ interface PageProps {
 
 export default async function SharedWorkflowPage({ params }: PageProps) {
   const { id } = await params;
-  const workflow = await getWorkflow(id);
+
+  let workflow: Awaited<ReturnType<typeof getWorkflow>>;
+  try {
+    workflow = await getWorkflow(id);
+  } catch {
+    notFound();
+  }
 
   if (!workflow) {
     notFound();

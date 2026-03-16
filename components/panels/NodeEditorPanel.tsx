@@ -1,8 +1,9 @@
 "use client";
 
 import { type Node } from "@xyflow/react";
-import { NODE_CONFIGS, type NodeType } from "@/types";
+import { NODE_CONFIGS, NodeType } from "@/types";
 import type { GxPNodeData } from "../graph/nodes/GxPNode";
+import { NodeIcon } from "../graph/NodeIcon";
 
 interface NodeEditorPanelProps {
   node: Node | null;
@@ -20,7 +21,7 @@ export function NodeEditorPanel({ node, onUpdate, onClose }: NodeEditorPanelProp
     <div className="fixed bottom-4 left-1/2 z-40 w-full max-w-sm -translate-x-1/2 rounded-xl border border-[#e2e6ea] bg-white p-4 shadow-lg">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-base">{config.icon}</span>
+          <NodeIcon type={data.nodeType as NodeType} className="h-4 w-4 text-[#5a6577]" />
           <span
             className="text-[10px] font-medium uppercase tracking-wider"
             style={{ color: config.borderColor }}

@@ -115,9 +115,6 @@ export default function LandingPage() {
               </span>
             ))}
           </div>
-          <p className="mt-4 text-sm text-[#8b95a5]">
-            Built in 3 days as a solo engineer
-          </p>
         </div>
       </section>
 

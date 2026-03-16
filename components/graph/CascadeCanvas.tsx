@@ -407,6 +407,20 @@ export function CascadeCanvas({
           />
         </ReactFlow>
 
+        {/* Empty state */}
+        {nodes.length === 0 && !simulationOpen && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-lg font-semibold text-[#1a2332]/40">
+                Drag nodes from the sidebar to get started
+              </p>
+              <p className="mt-2 text-sm text-[#5a6577]/50">
+                Connect them to build your GxP workflow
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Toolbar */}
         {simulationOpen && (
           <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2">
