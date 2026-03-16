@@ -180,20 +180,17 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-[#e2e6ea] px-8 py-8">
-        <div className="mx-auto flex max-w-4xl items-center justify-between">
-          <p className="text-xs text-[#8b95a5]">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm text-[#8b95a5]">
             Built by{" "}
             <a
-              href="https://www.linkedin.com/in/flynnlachendro/"
+              href="https://flynnlachendro.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#5a6577] underline underline-offset-2 transition-colors hover:text-[#1a2332]"
+              className="text-[#5a6577] transition-colors hover:text-[#1a2332] hover:underline hover:underline-offset-2"
             >
               Flynn Lachendro
             </a>
-          </p>
-          <p className="text-xs text-[#8b95a5]">
-            GxP Change Impact Analyzer
           </p>
         </div>
       </footer>
