@@ -63,7 +63,7 @@ export default function LandingPage() {
               </div>
             </div>
             {/* App preview iframe */}
-            <div className="relative h-[500px] bg-[#f4f5f7]">
+            <div className="relative h-[700px] bg-[#f4f5f7]">
               <iframe
                 src="/editor?template=car-t"
                 className="h-full w-full border-0"
