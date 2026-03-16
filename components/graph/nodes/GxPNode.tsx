@@ -31,7 +31,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
   return (
     <div
       className={cn(
-        "relative min-w-[180px] max-w-[260px] rounded-md border-l-[3px] bg-white px-3 py-2.5 transition-all duration-300",
+        "relative min-w-[180px] max-w-[260px] cursor-default rounded-md border-l-[3px] bg-white px-3 py-2.5 transition-all duration-200 hover:shadow-md",
         selected && "ring-1 ring-[#1a3a6b]/40 ring-offset-1",
         data.isSimulating && "animate-pulse"
       )}
@@ -39,8 +39,8 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
         borderLeftColor: severityStyle?.border || config.borderColor,
         backgroundColor: severityStyle ? severityStyle.bg : "#ffffff",
         boxShadow: severityStyle
-          ? `0 1px 4px ${severityStyle.border}20`
-          : "0 1px 3px rgba(0,0,0,0.05)",
+          ? `0 2px 8px ${severityStyle.border}25`
+          : undefined,
       }}
     >
       <Handle
