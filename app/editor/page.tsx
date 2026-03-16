@@ -124,7 +124,7 @@ function EditorContent() {
       <header className="flex h-12 items-center justify-between border-b border-[#e2e6ea] px-4">
         <div className="flex items-center gap-3">
           <a href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight text-[#1a2332]">
-            <img src="/cascade-logo.png" alt="" className="h-7 w-7" />
+            <img src="/cascade-logo.png" alt="" className="h-9 w-9" />
             Cascade
           </a>
           <span className="text-[#e2e6ea]">|</span>

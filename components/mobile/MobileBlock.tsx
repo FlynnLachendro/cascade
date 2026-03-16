@@ -3,7 +3,7 @@
 export function MobileBlock() {
   return (
     <div className="fixed inset-0 z-50 flex min-h-screen flex-col items-center justify-center bg-white px-8 text-center md:hidden">
-      <img src="/cascade-logo.png" alt="Cascade" className="mb-6 h-12 w-12" />
+      <img src="/cascade-logo.png" alt="Cascade" className="mb-6 h-20 w-20" />
       <h1 className="mb-3 text-xl font-bold tracking-tight text-[#1a2332]">
         Desktop Only
       </h1>
