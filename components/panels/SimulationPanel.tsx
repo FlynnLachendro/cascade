@@ -37,7 +37,7 @@ export function SimulationPanel({
   if (!isOpen) return null;
 
   return (
-    <div className="flex w-[380px] flex-col border-l border-slate-200 bg-white">
+    <div className="flex w-[380px] flex-col border-l border-stone-200 bg-[#faf9f7]">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
         <div>
@@ -71,8 +71,8 @@ export function SimulationPanel({
       </div>
 
       {/* Change description */}
-      <div className="border-b border-slate-100 bg-blue-50/50 px-4 py-2.5">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-blue-600">
+      <div className="border-b border-stone-100 bg-stone-50/50 px-4 py-2.5">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-stone-500">
           Change
         </p>
         <p className="mt-0.5 text-xs text-slate-700">{changeDescription}</p>

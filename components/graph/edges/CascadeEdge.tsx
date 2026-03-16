@@ -30,8 +30,8 @@ export function CascadeEdge({
       id={id}
       path={edgePath}
       style={{
-        stroke: isAnimated ? "#3b82f6" : "#cbd5e1",
-        strokeWidth: isAnimated ? 2.5 : 1.5,
+        stroke: isAnimated ? "#4a6a9a" : "#d4cfc8",
+        strokeWidth: isAnimated ? 2 : 1.5,
         strokeDasharray: isAnimated ? "8 4" : undefined,
         animation: isAnimated ? "dash 0.6s linear infinite" : undefined,
       }}

@@ -1,0 +1,2 @@
+[      98ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/w/invalid-id-12345:0
+[    3222ms] [WARNING] The resource http://localhost:3000/_next/static/chunks/a2e12_%40xyflow_react_dist_style_e368de9a.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/w/invalid-id-12345:0

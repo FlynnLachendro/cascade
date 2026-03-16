@@ -1,0 +1,22 @@
+[ 3647817ms] [ERROR] ./components/graph/CascadeCanvas.tsx:23:1
+Module not found: Can't resolve '../panels/NodeEditorPanel'
+  21 | import { SimulationPanel, type ImpactCard } from "../panels/SimulationPanel";
+  22 | import { ChangeSelector } from "../panels/ChangeSelector";
+> 23 | import { NodeEditorPanel } from "../panels/NodeEditorPanel";
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  24 | import { NodeType, type Severity, type WorkflowNode, type WorkflowEdge, NODE_CONFIGS } from "@/types";
+  25 |
+  26 | // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+Import traces:
+  Client Component Browser:
+    ./components/graph/CascadeCanvas.tsx [Client Component Browser]
+    ./app/editor/page.tsx [Client Component Browser]
+    ./app/editor/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/graph/CascadeCanvas.tsx [Client Component SSR]
+    ./app/editor/page.tsx [Client Component SSR]
+    ./app/editor/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3000/_next/static/chunks/b2b3e_next_dist_77a734fe._.js:3127

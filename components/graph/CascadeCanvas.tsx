@@ -398,9 +398,9 @@ export function CascadeCanvas({
           fitView
           fitViewOptions={{ padding: 0.3 }}
           deleteKeyCode={["Backspace", "Delete"]}
-          className="bg-slate-50/30"
+          className="bg-[#f8f7f5]"
         >
-          <Background color="#e2e8f0" gap={20} size={1} />
+          <Background color="#e8e5df" gap={24} size={1} />
           <Controls
             showInteractive={false}
             className="!border-slate-200 !bg-white !shadow-sm"

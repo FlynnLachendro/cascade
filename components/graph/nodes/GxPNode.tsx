@@ -30,26 +30,26 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
   return (
     <div
       className={cn(
-        "relative min-w-[180px] max-w-[260px] rounded-lg border-l-4 bg-white px-3 py-2.5 shadow-sm transition-all duration-300",
-        selected && "ring-2 ring-blue-500 ring-offset-1",
+        "relative min-w-[180px] max-w-[260px] rounded-md border-l-[3px] bg-white px-3 py-2.5 transition-all duration-300",
+        selected && "ring-1 ring-slate-400 ring-offset-1",
         data.isSimulating && "animate-pulse"
       )}
       style={{
         borderLeftColor: severityStyle?.border || config.borderColor,
-        backgroundColor: severityStyle?.bg || "#ffffff",
+        backgroundColor: severityStyle?.bg || config.color,
         boxShadow: severityStyle
-          ? `0 0 12px ${severityStyle.border}40`
-          : "0 1px 3px rgba(0,0,0,0.08)",
+          ? `0 1px 4px ${severityStyle.border}20`
+          : "0 1px 3px rgba(0,0,0,0.05)",
       }}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!h-2.5 !w-2.5 !border-2 !border-white !bg-slate-400"
+        className="!h-2.5 !w-2.5 !border-2 !border-white !bg-stone-400"
       />
 
       <div className="flex items-start gap-2">
-        <span className="mt-0.5 text-base leading-none">{config.icon}</span>
+        <span className="mt-0.5 text-[10px] leading-none" style={{ color: config.borderColor }}>{config.icon}</span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span
@@ -69,7 +69,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
               </span>
             )}
             {data.severity === "trigger" && (
-              <span className="rounded bg-blue-600 px-1 py-0.5 text-[9px] font-bold uppercase text-white">
+              <span className="rounded bg-slate-700 px-1 py-0.5 text-[9px] font-bold uppercase text-white">
                 trigger
               </span>
             )}
@@ -87,7 +87,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
 
       {isProcessStep && !data.severity && (
         <div className="mt-2 border-t border-slate-100 pt-1.5">
-          <span className="text-[10px] font-medium text-blue-500">
+          <span className="text-[10px] font-medium text-slate-400">
             Click to simulate change →
           </span>
         </div>
@@ -96,7 +96,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!h-2.5 !w-2.5 !border-2 !border-white !bg-slate-400"
+        className="!h-2.5 !w-2.5 !border-2 !border-white !bg-stone-400"
       />
     </div>
   );
