@@ -14,8 +14,8 @@ export function NodeSidebar() {
   };
 
   return (
-    <div className="flex w-[200px] flex-col border-r border-stone-200 bg-[#f5f4f2] p-3">
-      <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+    <div className="flex w-[200px] flex-col border-r border-[#e2e6ea] bg-[#f4f5f7] p-3">
+      <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
         Node Types
       </h3>
       <div className="flex flex-col gap-1.5">
@@ -26,11 +26,11 @@ export function NodeSidebar() {
               key={type}
               draggable
               onDragStart={(e) => onDragStart(e, type)}
-              className="flex cursor-grab items-center gap-2 rounded-md border border-slate-200 bg-white px-2.5 py-2 text-sm transition-colors hover:border-slate-300 hover:bg-slate-50 active:cursor-grabbing"
-              style={{ borderLeftColor: config.borderColor, borderLeftWidth: 3 }}
+              className="flex cursor-grab items-center gap-2 rounded-md border border-[#e2e6ea] bg-white px-2.5 py-2 text-sm transition-colors hover:border-[#c8cdd4] hover:bg-[#f9fafb] active:cursor-grabbing"
+              style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2 }}
             >
-              <span className="text-[10px]" style={{ color: config.borderColor }}>{config.icon}</span>
-              <span className="text-xs font-medium text-slate-700">
+              <span className="text-[10px]" style={{ color: "#5a6577" }}>{config.icon}</span>
+              <span className="text-xs font-medium text-[#1a2332]">
                 {config.label}
               </span>
             </div>

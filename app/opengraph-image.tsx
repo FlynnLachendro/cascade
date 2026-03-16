@@ -10,7 +10,7 @@ export default function OGImage() {
     (
       <div
         style={{
-          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          background: "linear-gradient(135deg, #1a3a6b 0%, #0f2440 100%)",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -33,7 +33,7 @@ export default function OGImage() {
               width: "48px",
               height: "48px",
               borderRadius: "12px",
-              background: "#3b82f6",
+              background: "#1a3a6b",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -95,7 +95,7 @@ export default function OGImage() {
               style={{
                 padding: "8px 16px",
                 borderRadius: "8px",
-                border: "1px solid #334155",
+                border: "1px solid #2d4a6b",
                 color: "#94a3b8",
                 fontSize: "16px",
                 fontWeight: 500,

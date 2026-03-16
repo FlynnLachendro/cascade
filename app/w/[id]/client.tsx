@@ -45,17 +45,18 @@ export function SharedWorkflowClient({ workflow }: { workflow: WorkflowData }) {
 
   return (
     <div className="flex h-screen flex-col bg-white">
-      <header className="flex h-12 items-center justify-between border-b border-slate-200 px-4">
+      <header className="flex h-12 items-center justify-between border-b border-[#e2e6ea] px-4">
         <div className="flex items-center gap-3">
-          <a href="/" className="text-sm font-bold tracking-tight text-slate-900">
+          <a href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight text-[#1a2332]">
+            <img src="/cascade-logo.png" alt="" className="h-5 w-5" />
             Cascade
           </a>
-          <span className="text-slate-300">|</span>
-          <span className="text-sm text-slate-500">{workflow.name}</span>
+          <span className="text-[#e2e6ea]">|</span>
+          <span className="text-sm text-[#5a6577]">{workflow.name}</span>
         </div>
         <a
           href="/editor"
-          className="rounded-lg bg-slate-900 px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-slate-800"
+          className="rounded-lg bg-[#1a3a6b] px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#152e55]"
         >
           Build Your Own
         </a>

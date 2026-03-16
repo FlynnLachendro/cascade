@@ -398,12 +398,12 @@ export function CascadeCanvas({
           fitView
           fitViewOptions={{ padding: 0.3 }}
           deleteKeyCode={["Backspace", "Delete"]}
-          className="bg-[#f8f7f5]"
+          className="bg-[#f4f5f7]"
         >
-          <Background color="#e8e5df" gap={24} size={1} />
+          <Background color="#dde0e4" gap={24} size={1} />
           <Controls
             showInteractive={false}
-            className="!border-slate-200 !bg-white !shadow-sm"
+            className="!border-[#e2e6ea] !bg-white !shadow-sm"
           />
         </ReactFlow>
 
@@ -412,7 +412,7 @@ export function CascadeCanvas({
           <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2">
             <button
               onClick={clearSimulation}
-              className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+              className="rounded-lg border border-[#e2e6ea] bg-white px-4 py-2 text-sm font-medium text-[#1a2332] shadow-sm transition-colors hover:bg-[#f4f5f7]"
             >
               Clear Simulation
             </button>
