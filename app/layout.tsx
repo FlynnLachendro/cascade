@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MobileBlock } from "@/components/mobile/MobileBlock";
 import "./globals.css";
 
-const inter = Inter({
+const sourceSans = Source_Sans_3({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${sourceSans.variable} font-sans antialiased`}>
         <MobileBlock />
         <TooltipProvider>{children}</TooltipProvider>
       </body>

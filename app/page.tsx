@@ -6,7 +6,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5">
         <div className="flex items-center gap-2">
-          <img src="/cascade-logo.png" alt="Cascade" className="h-6 w-6" />
+          <img src="/cascade-logo.png" alt="Cascade" className="h-8 w-8" />
           <span className="text-base font-bold tracking-tight text-[#1a2332]">
             Cascade
           </span>
@@ -20,7 +20,8 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="mx-auto max-w-3xl px-8 pb-20 pt-24 text-center">
+      <section className="mx-auto max-w-3xl px-8 pb-20 pt-16 text-center">
+        <img src="/cascade-logo.png" alt="Cascade" className="mx-auto mb-8 h-20 w-20" />
         <div className="mb-6 inline-block rounded-full bg-[#f0f3f8] px-3.5 py-1 text-xs font-medium text-[#1a3a6b]">
           GxP Change Impact Analyzer
         </div>
