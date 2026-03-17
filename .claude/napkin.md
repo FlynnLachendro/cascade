@@ -3,6 +3,9 @@
 ## Corrections
 | Date | Source | What Went Wrong | What To Do Instead |
 |------|--------|----------------|-------------------|
+| 2026-03-17 | Flynn | Node color changes during simulation confused identity | Badge-only approach — keep type colors, add severity badge below divider |
+| 2026-03-17 | Flynn | Category picker used jargon (SUPAC/CBE-30) with no context | Plain-English descriptions first, filing type as small label below |
+| 2026-03-17 | Flynn | Legend positioned at bottom-left, hidden behind zoom controls & off-screen | Always position overlay UI at top of canvas, zoom controls top-right |
 
 ## User Preferences
 - uv for Python package management, no venvs
@@ -18,8 +21,16 @@
 - OG image: Next.js opengraph-image.tsx with ImageResponse — auto-wires og:image meta tags
 - ChangeSelector: modal overlay for process steps, textarea fallback for custom nodes
 
+## Patterns That Work (continued)
+- Badge-only severity: don't change node bg/border colors during simulation — keep type identity, add severity badge in footer section + subtle ring. Previous approach of recoloring nodes was confusing
+- SimulationLegend: collapsible floating panel explaining severity levels, animated edges, trigger badge in plain English
+- ChangeSelector guided steps: numbered steps with progressive disclosure (step 2 fades until step 1 done), plain-English category descriptions
+- React Flow Controls at top-right, legend at top-left — bottom positioning gets hidden on large graphs requiring scroll
+
 ## Patterns That Don't Work
-- (accumulate as work progresses)
+- Changing node colors to indicate severity — destroys node type identity, confusing for users unfamiliar with the domain
+- Positioning overlay UI at bottom of React Flow canvas — large graphs push controls off-screen, requiring scroll to find them
+- Jargon-only labels (SUPAC, CBE-30, PAS) without plain-English explanation — Flynn got stuck on the category picker
 
 ## Domain Notes
 - Cascade is a GxP Change Impact Analyzer — demonstrates systems thinking to Seal CEO Will Moss
