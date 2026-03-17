@@ -188,45 +188,53 @@ enum NodeType {
   VALIDATION_PROTOCOL = "validation_protocol",
   CAPA = "capa",
   REGULATORY_SUBMISSION = "regulatory_submission",
+  SPECIFICATION = "specification",
+  STABILITY_PROTOCOL = "stability_protocol",
+  RAW_MATERIAL = "raw_material",
+}
+
+enum ChangeCategory {
+  MINOR = "minor",
+  MODERATE = "moderate",
+  MAJOR = "major",
 }
 ```
 
 Each type has:
 - Display name
-- Color (matching Seal's navy/white/green palette, severity-aware)
-- Icon
+- Color (matching Seal's navy/white/green palette — type colors stay constant during simulation)
+- Icon (SVG in NodeIcon.tsx)
 - Description template
-- Cascade rules (what severities propagate to which connected types)
+- Cascade rules (category-aware: Minor/Moderate/Major produce different severities per source→target pair)
 
 ---
 
 ## Cascade Rules Engine
 
-Hardcoded rules config. When a node is impacted, the engine looks at all outgoing edges and applies severity rules based on source type → target type.
+Hardcoded rules config (~36 rules). When a node is impacted, the engine looks at all outgoing edges and applies severity rules based on (source type, target type, change category). Each rule includes a `regulatoryAction` string specifying the required FDA filing type.
 
-### Rules Table
+### Rules Structure
 
-| Source Type         | Target Type             | Severity  | Reason                                       |
-|--------------------|------------------------|-----------|----------------------------------------------|
-| PROCESS_STEP       | SOP                    | High      | SOP must reflect current process parameters  |
-| PROCESS_STEP       | BATCH_RECORD           | High      | Batch record template must match process     |
-| PROCESS_STEP       | VALIDATION_PROTOCOL    | Critical  | CPP change requires revalidation             |
-| PROCESS_STEP       | EQUIPMENT_QUALIFICATION| Medium    | May affect equipment operating range         |
-| SOP                | TRAINING_RECORD        | High      | Operators must retrain on revised SOP        |
-| SOP                | CAPA                   | Medium    | Change must be tracked through CAPA system   |
-| VALIDATION_PROTOCOL| REGULATORY_SUBMISSION  | Critical  | CMC changes may require regulatory amendment |
-| BATCH_RECORD       | REGULATORY_SUBMISSION  | Medium    | Updated records may affect filing            |
-| EQUIPMENT_QUALIFICATION | VALIDATION_PROTOCOL | Medium  | Equipment changes may affect process validation |
+Each rule maps `(sourceType, targetType, category)` → `(severity, regulatoryAction, reason)`.
+
+Example for PROCESS_STEP → SOP:
+| Category | Severity | Regulatory Action |
+|----------|----------|-------------------|
+| Minor | Medium | Annual Report per 21 CFR 314.70(d) |
+| Moderate | High | CBE-30 supplement per 21 CFR 314.70(c) |
+| Major | Critical | PAS per 21 CFR 314.70(b) — production hold |
+
+Coverage: PROCESS_STEP → SOP, BATCH_RECORD, VALIDATION_PROTOCOL, EQUIPMENT_QUALIFICATION, CAPA, SPECIFICATION, STABILITY_PROTOCOL. SOP → TRAINING_RECORD. VALIDATION_PROTOCOL → REGULATORY_SUBMISSION. BATCH_RECORD → REGULATORY_SUBMISSION. EQUIPMENT_QUALIFICATION → VALIDATION_PROTOCOL. SPECIFICATION → REGULATORY_SUBMISSION.
 
 ### Cascade Algorithm
 
 1. Mark trigger node as impacted (severity: "trigger")
 2. BFS traversal from trigger node following outgoing edges
-3. For each connected node, look up rule for (source.type → target.type)
-4. If rule exists, mark node as impacted with that severity
+3. For each connected node, look up rule for (source.type, target.type, changeCategory)
+4. If rule exists, mark node as impacted with that severity + regulatoryAction
 5. Continue traversal from newly impacted nodes
 6. Prevent cycles (don't revisit nodes)
-7. Return ordered list of impacted nodes with severities
+7. Return ordered list of impacted nodes with severities and regulatory actions
 
 ### AI Explanation Layer
 
@@ -247,13 +255,17 @@ For each impacted node, send to Gemini 2.0 Flash via OpenRouter:
 - `severity_justification`: Why this severity level applies
 
 **Regulatory Context Fed to LLM:**
+- 21 CFR 314.70 — Supplements and other changes to an approved NDA (PAS, CBE-30, Annual Report)
 - 21 CFR 211.186 — Master production and control records
 - 21 CFR 211.68 — Automatic, mechanical, and electronic equipment
 - 21 CFR 211.25 — Personnel qualifications and training
-- ICH Q10 — Pharmaceutical Quality System (change management)
+- 21 CFR 210/211 — Current Good Manufacturing Practice (cGMP)
+- SUPAC — Scale-Up and Post-Approval Changes (change categories)
+- ICH Q12 — Lifecycle Management (Established Conditions)
+- ICH Q10 — Pharmaceutical Quality System (change management, CAPA)
 - ICH Q9 — Quality Risk Management
-- EU GMP Annex 11 — Computerised Systems
-- 21 CFR Part 11 — Electronic records, electronic signatures
+- ICH Q8(R2) — Pharmaceutical Development (Design Space, CPPs, CQAs, PAR)
+- ICH Q1A/Q5C — Stability testing requirements
 
 ---
 
@@ -279,6 +291,8 @@ For each impacted node, send to Gemini 2.0 Flash via OpenRouter:
 
 ### Supporting Nodes
 
+- **SPEC-001:** Product Specification (in-process and release specs)
+- **STAB-005:** Stability Protocol (ICH Q5C for cryopreserved product)
 - **SOP-0042:** Cell Washing Procedure
 - **SOP-0051:** Cell Expansion Protocol
 - **SOP-0067:** Cryopreservation Procedure
@@ -294,7 +308,7 @@ For each impacted node, send to Gemini 2.0 Flash via OpenRouter:
 
 ### Template Graph Layout
 
-Top-to-bottom tree layout. Process steps at the top, downstream impacts flowing down. Approximately 15 nodes, ~20 edges.
+Top-to-bottom tree layout. Specification + Stability Protocol at y=-200 above process steps. Process steps at the top row, downstream impacts flowing down. 17 nodes, 28 edges.
 
 ---
 
@@ -316,7 +330,7 @@ Top-to-bottom tree layout. Process steps at the top, downstream impacts flowing 
 
 ### Graph Editor
 
-1. **Left sidebar:** Draggable node type palette — 8 node types with icons and labels. Drag onto canvas to create.
+1. **Left sidebar:** Draggable node type palette — 11 node types with icons and labels. Drag onto canvas to create.
 2. **Canvas (center):** React Flow graph. Click nodes to select, drag to move, drag handles between nodes to connect. Top-to-bottom layout.
 3. **Node editing:** Click a node → editor panel appears (inline or modal) to set name, description, regulatory references.
 4. **Edge creation:** Drag from source handle to target handle. Edge labeled with relationship type.
@@ -324,19 +338,19 @@ Top-to-bottom tree layout. Process steps at the top, downstream impacts flowing 
 
 ### Cascade Simulation
 
-1. User confirms change on a Process Step node
-2. Trigger node pulses/glows
-3. Edges animate outward (dashed lines flowing in cascade direction)
-4. Connected nodes light up one by one with severity colors:
-   - Critical: deep red
-   - High: red/orange
-   - Medium: amber
-   - Low: muted/green
-5. Each node gets a severity badge
+1. User selects a change + change category (Minor/Moderate/Major) via guided ChangeSelector
+2. Trigger node gets "CHANGE TRIGGERED" badge (type colors preserved)
+3. Edges animate outward (subtle dashed lines, 60% opacity, 1s speed)
+4. Connected nodes get severity badges below a divider + subtle ring outline in severity color. Node type colors/borders stay constant — identity preserved:
+   - Critical: deep red badge
+   - High: red/orange badge
+   - Medium: amber badge
+   - Low: green badge
+5. "Reading the simulation" legend panel appears top-left explaining badges, edges, and trigger
 6. Right panel (SimulationPanel) slides in and streams AI explanations:
    - Each impacted node appears as a card
    - Cards stream in progressively as the LLM responds
-   - Each card shows: node name, severity tag, explanation, regulation citation, recommended action
+   - Each card shows: node name, severity tag, explanation, regulation citation, "Filing:" line with regulatory action, recommended action
 7. Animation is paced to feel deliberate (not instant), similar to Arbor's streaming UX
 
 ### Reset & Export
@@ -473,7 +487,7 @@ NEXT_PUBLIC_APP_URL=           # For shareable URLs and OG tags
 1. **Systems thinking:** The entire app IS systems thinking — modeling dependencies, understanding cascading impacts, reasoning about regulatory interconnections
 2. **Abstract understanding:** Built a tool FOR reasoning about systems at an abstract level, not just one hardcoded demo
 3. **Their stack:** TypeScript, React, Node.js, GraphQL, PostgreSQL — all present
-4. **Domain knowledge:** Real regulatory frameworks (21 CFR, ICH Q10, EU GMP Annex 11), real manufacturing scenarios (CAR-T), real GxP concepts
+4. **Domain knowledge:** Real regulatory frameworks (21 CFR 314.70, SUPAC, ICH Q12, ICH Q8(R2)), real manufacturing scenarios (CAR-T), real GxP change control concepts (PAS/CBE-30/Annual Report, CPPs, CQAs)
 5. **AI integration:** Practical, purposeful AI — not a gimmick, but regulatory reasoning that actually helps
 6. **Shipping speed:** Built and deployed in 3 days as a solo dev
 7. **Product sense:** Landing page, shareable URLs, export, clean UX — not just a tech demo but a product
