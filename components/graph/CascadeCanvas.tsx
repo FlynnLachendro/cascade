@@ -22,6 +22,7 @@ import { SimulationPanel, type ImpactCard } from "../panels/SimulationPanel";
 import { ChangeSelector } from "../panels/ChangeSelector";
 import { NodeEditorPanel } from "../panels/NodeEditorPanel";
 import { NodeType, type Severity, type WorkflowNode, type WorkflowEdge, NODE_CONFIGS, type ChangeCategory } from "@/types";
+import { NodeIcon } from "./NodeIcon";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nodeTypes = { gxp: GxPNode } as any;
@@ -510,12 +511,12 @@ function GraphGuide() {
                 Node types
               </p>
               <div className="mt-2 space-y-1.5">
-                <GuideRow color="#1a3a6b" label="Process Step" description="A manufacturing operation — click to simulate a change" />
-                <GuideRow color="#2d5a3d" label="SOP" description="Standard Operating Procedure governing a step" />
-                <GuideRow color="#6b5b2d" label="Training" description="Operator certification records" />
-                <GuideRow color="#4a3d6b" label="Batch Record" description="Production documentation template" />
-                <GuideRow color="#6b2d3d" label="Validation" description="Proof the process works consistently" />
-                <GuideRow color="#3d2d5a" label="Regulatory" description="FDA filing (the final downstream impact)" />
+                {Object.values(NodeType).map((type) => {
+                  const config = NODE_CONFIGS[type];
+                  return (
+                    <GuideRow key={type} nodeType={type} color={config.borderColor} label={config.label} description={config.description} />
+                  );
+                })}
               </div>
             </div>
 
@@ -548,11 +549,12 @@ function GraphGuide() {
   );
 }
 
-function GuideRow({ color, label, description }: { color: string; label: string; description: string }) {
+function GuideRow({ nodeType, color, label, description }: { nodeType: NodeType; color: string; label: string; description: string }) {
   return (
-    <div className="grid grid-cols-[80px_1fr] items-center gap-x-3">
-      <div className="flex items-center gap-1.5">
-        <span className="h-2.5 w-[3px] rounded-full" style={{ backgroundColor: color }} />
+    <div className="flex items-center gap-2">
+      <div className="flex w-[110px] shrink-0 items-center gap-1.5">
+        <span className="flex h-4 w-[3px] shrink-0 rounded-full" style={{ backgroundColor: color }} />
+        <NodeIcon type={nodeType} className="h-3 w-3 shrink-0" />
         <span className="text-[11px] font-semibold text-[#1a2332]">{label}</span>
       </div>
       <span className="text-[11px] leading-snug text-[#5a6577]">{description}</span>
