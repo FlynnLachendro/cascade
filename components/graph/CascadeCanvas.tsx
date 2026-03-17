@@ -475,15 +475,15 @@ function SimulationLegend() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="absolute left-3 top-4 z-20 w-[260px]">
-      <div className="rounded-lg border border-[#e2e6ea] bg-white/95 shadow-sm backdrop-blur-sm">
+    <div className="absolute left-3 top-4 z-20 w-[320px]">
+      <div className="rounded-xl border border-[#e2e6ea] bg-white/95 shadow-md backdrop-blur-sm">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="flex w-full items-center justify-between px-3 py-2 text-left"
+          className="flex w-full items-center justify-between px-4 py-3 text-left"
         >
-          <span className="text-[11px] font-semibold text-[#1a2332]">Reading the simulation</span>
+          <span className="text-sm font-semibold text-[#1a2332]">Reading the simulation</span>
           <svg
-            className={`h-3.5 w-3.5 text-[#8b95a5] transition-transform ${collapsed ? "-rotate-90" : ""}`}
+            className={`h-4 w-4 text-[#8b95a5] transition-transform ${collapsed ? "-rotate-90" : ""}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -494,12 +494,12 @@ function SimulationLegend() {
         </button>
 
         {!collapsed && (
-          <div className="border-t border-[#e2e6ea] px-3 pb-3 pt-2">
+          <div className="border-t border-[#e2e6ea] px-4 pb-4 pt-3">
             {/* Severity badges */}
-            <p className="text-[10px] font-medium uppercase tracking-wider text-[#8b95a5]">
-              Badges on nodes
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+              Severity badges
             </p>
-            <div className="mt-1.5 space-y-1.5">
+            <div className="mt-2.5 space-y-2">
               <LegendRow color="#9b2c2c" label="Critical" description="Must fix before production can continue" />
               <LegendRow color="#c4553a" label="High" description="Needs action before the next batch" />
               <LegendRow color="#b8860b" label="Medium" description="Should be addressed, not a blocker" />
@@ -507,31 +507,35 @@ function SimulationLegend() {
             </div>
 
             {/* Animated edges */}
-            <p className="mt-3 text-[10px] font-medium uppercase tracking-wider text-[#8b95a5]">
-              Connections
-            </p>
-            <div className="mt-1.5 flex items-center gap-2">
-              <svg className="h-3 w-10 shrink-0" viewBox="0 0 40 12">
-                <line x1="0" y1="6" x2="40" y2="6" stroke="#1a3a6b" strokeWidth="1.5" strokeDasharray="6 6" opacity="0.6">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1s" repeatCount="indefinite" />
-                </line>
-              </svg>
-              <span className="text-[10px] leading-tight text-[#5a6577]">
-                Dashed lines show how the impact travels from one document to the next
-              </span>
+            <div className="mt-4 border-t border-[#e2e6ea] pt-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+                Connections
+              </p>
+              <div className="mt-2.5 grid grid-cols-[80px_1fr] items-center gap-x-3">
+                <svg className="h-3 w-full" viewBox="0 0 80 12" preserveAspectRatio="none">
+                  <line x1="0" y1="6" x2="80" y2="6" stroke="#1a3a6b" strokeWidth="1.5" strokeDasharray="6 6" opacity="0.6">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1s" repeatCount="indefinite" />
+                  </line>
+                </svg>
+                <span className="text-xs leading-snug text-[#5a6577]">
+                  Shows how the impact travels between documents
+                </span>
+              </div>
             </div>
 
             {/* Trigger */}
-            <p className="mt-3 text-[10px] font-medium uppercase tracking-wider text-[#8b95a5]">
-              Starting point
-            </p>
-            <div className="mt-1.5 flex items-center gap-2">
-              <span className="shrink-0 rounded bg-[#1a3a6b] px-1.5 py-0.5 text-[8px] font-bold uppercase text-white">
-                change triggered
-              </span>
-              <span className="text-[10px] leading-tight text-[#5a6577]">
-                The node where you made the change
-              </span>
+            <div className="mt-4 border-t border-[#e2e6ea] pt-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+                Starting point
+              </p>
+              <div className="mt-2.5 grid grid-cols-[80px_1fr] items-center gap-x-3">
+                <span className="rounded bg-[#1a3a6b] px-2 py-1 text-center text-[9px] font-bold uppercase leading-none text-white">
+                  triggered
+                </span>
+                <span className="text-xs leading-snug text-[#5a6577]">
+                  The node where you made the change
+                </span>
+              </div>
             </div>
           </div>
         )}
@@ -542,14 +546,14 @@ function SimulationLegend() {
 
 function LegendRow({ color, label, description }: { color: string; label: string; description: string }) {
   return (
-    <div className="flex items-start gap-2">
+    <div className="grid grid-cols-[80px_1fr] items-center gap-x-3">
       <span
-        className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[8px] font-bold uppercase text-white"
+        className="rounded px-2 py-1 text-center text-[10px] font-bold uppercase leading-none text-white"
         style={{ backgroundColor: color }}
       >
         {label}
       </span>
-      <span className="text-[10px] leading-tight text-[#5a6577]">{description}</span>
+      <span className="text-xs leading-snug text-[#5a6577]">{description}</span>
     </div>
   );
 }
