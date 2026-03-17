@@ -474,7 +474,7 @@ function SimulationLegend() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="absolute bottom-4 left-4 z-10 w-[260px]">
+    <div className="absolute bottom-28 left-3 z-20 w-[260px]">
       <div className="rounded-lg border border-[#e2e6ea] bg-white/95 shadow-sm backdrop-blur-sm">
         <button
           onClick={() => setCollapsed(!collapsed)}
