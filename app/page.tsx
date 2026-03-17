@@ -59,7 +59,7 @@ export default function LandingPage() {
                 <div className="h-3 w-3 rounded-full bg-[#e2e6ea]" />
               </div>
               <div className="ml-4 flex-1 rounded-md bg-white px-3 py-1 text-xs text-[#8b95a5]">
-                cascade.dev/editor?template=car-t
+                cascadegxp.com/editor?template=car-t
               </div>
             </div>
             {/* App preview iframe */}
