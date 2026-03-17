@@ -521,7 +521,7 @@ function GraphGuide() {
                   <div
                     key={type}
                     className="flex items-center gap-2 rounded-md border border-[#e2e6ea] px-2 py-1.5"
-                    style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2, backgroundColor: `${config.borderColor}14` }}
+                    style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2, backgroundColor: config.color }}
                   >
                     <NodeIcon type={type} className="h-3 w-3 shrink-0" style={{ color: config.borderColor }} />
                     <span className="text-[11px] font-semibold" style={{ color: config.borderColor }}>{config.label}</span>

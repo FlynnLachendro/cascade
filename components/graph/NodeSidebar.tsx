@@ -28,7 +28,7 @@ export function NodeSidebar() {
               draggable
               onDragStart={(e) => onDragStart(e, type)}
               className="flex cursor-grab items-center gap-2 rounded-md border border-[#e2e6ea] px-2.5 py-2 text-sm transition-colors hover:border-[#c8cdd4] active:cursor-grabbing"
-              style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2, backgroundColor: `${config.borderColor}14` }}
+              style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2, backgroundColor: config.color }}
             >
               <NodeIcon type={type} className="h-3.5 w-3.5" style={{ color: config.borderColor }} />
               <span className="text-xs font-semibold" style={{ color: config.borderColor }}>

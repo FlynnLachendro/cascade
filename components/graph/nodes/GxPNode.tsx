@@ -41,8 +41,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
       )}
       style={{
         borderLeftColor: config.borderColor,
-        // Type-tinted background
-        backgroundColor: `${config.borderColor}14`,
+        backgroundColor: config.color,
         ...(isAffected && severityStyle
           ? { ["--tw-ring-color" as string]: `${severityStyle.border}60` }
           : {}),
