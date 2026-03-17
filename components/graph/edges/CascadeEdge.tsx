@@ -38,8 +38,9 @@ export function CascadeEdge({
         stroke: isAnimated ? "#2c4a7c" : "#c8cdd4",
         strokeWidth: isAnimated ? 1.5 : 1,
         strokeDasharray: isAnimated ? "6 6" : undefined,
-        opacity: isAnimated ? 0.6 : 0.5,
+        opacity: isAnimated ? 0.7 : 0,
         animation: isAnimated ? "dash 1s linear infinite" : undefined,
+        transition: "opacity 0.4s ease",
       }}
     />
   );
