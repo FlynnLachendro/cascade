@@ -35,6 +35,7 @@ interface CascadeCanvasProps {
   workflowName?: string;
   workflowId?: string;
   stateRef?: React.MutableRefObject<{ nodes: Node[]; edges: Edge[] } | null>;
+  hideGuide?: boolean;
 }
 
 let idCounter = 0;
@@ -48,6 +49,7 @@ export function CascadeCanvas({
   workflowName = "Untitled Workflow",
   workflowId,
   stateRef,
+  hideGuide,
 }: CascadeCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -451,7 +453,7 @@ export function CascadeCanvas({
       </div>
 
       {/* Graph guide — sits in panel position when no simulation is running */}
-      {!simulationOpen && nodes.length > 0 && <GraphGuide />}
+      {!simulationOpen && !hideGuide && nodes.length > 0 && <GraphGuide />}
 
       <SimulationPanel
         isOpen={simulationOpen}
@@ -533,14 +535,16 @@ function GraphGuide() {
 
           <div className="mt-3 border-t border-[#e2e6ea] pt-3">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
-              Connections
+              During simulation
             </p>
             <div className="mt-2 flex items-center gap-2">
               <svg className="h-3 w-12 shrink-0" viewBox="0 0 48 12" preserveAspectRatio="none">
-                <line x1="0" y1="6" x2="48" y2="6" stroke="#c8cdd4" strokeWidth="1.5" />
+                <line x1="0" y1="6" x2="48" y2="6" stroke="#2c4a7c" strokeWidth="1.5" strokeDasharray="6 6" opacity="0.7">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1s" repeatCount="indefinite" />
+                </line>
               </svg>
               <span className="text-[11px] leading-snug text-[#5a6577]">
-                A dependency between documents
+                Dashed lines appear showing how the impact spreads
               </span>
             </div>
           </div>

@@ -32,6 +32,7 @@ const SAVE_WORKFLOW = gql`
 function EditorContent() {
   const searchParams = useSearchParams();
   const loadTemplate = searchParams.get("template") === "car-t";
+  const isPreview = searchParams.get("preview") === "true";
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const canvasStateRef = useRef<{ nodes: Node[]; edges: Edge[] } | null>(null);
@@ -152,6 +153,7 @@ function EditorContent() {
           initialEdges={initialEdges}
           workflowName={workflowName}
           stateRef={canvasStateRef}
+          hideGuide={isPreview}
         />
       </div>
     </div>

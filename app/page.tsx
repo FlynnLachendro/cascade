@@ -65,7 +65,7 @@ export default function LandingPage() {
             {/* App preview iframe */}
             <div className="relative h-[700px] bg-[#f4f5f7]">
               <iframe
-                src="/editor?template=car-t"
+                src="/editor?template=car-t&preview=true"
                 className="h-full w-full border-0"
                 title="Cascade demo preview"
                 loading="lazy"

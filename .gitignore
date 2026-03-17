@@ -20,6 +20,11 @@
 # production
 /build
 
+# internal docs
+MASTERPLAN.md
+HANDOVER.md
+.claude/napkin.md
+
 # misc
 .DS_Store
 local.db
