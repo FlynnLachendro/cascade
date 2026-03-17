@@ -3,10 +3,11 @@ import { NodeType } from "@/types";
 interface NodeIconProps {
   type: NodeType;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function NodeIcon({ type, className = "h-4 w-4" }: NodeIconProps) {
-  const props = { className, fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", strokeWidth: 1.5 };
+export function NodeIcon({ type, className = "h-4 w-4", style }: NodeIconProps) {
+  const props = { className, style, fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", strokeWidth: 1.5 };
 
   switch (type) {
     case NodeType.PROCESS_STEP:

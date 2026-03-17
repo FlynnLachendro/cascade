@@ -33,18 +33,16 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
   return (
     <div
       className={cn(
-        "relative min-w-[180px] max-w-[260px] cursor-default rounded-md border-l-[3px] bg-white px-3 py-2.5 transition-all duration-200 hover:shadow-md",
+        "relative min-w-[180px] max-w-[260px] cursor-default rounded-md border-l-[3px] px-3 py-2.5 transition-all duration-200 hover:shadow-md",
         selected && "ring-1 ring-[#1a3a6b]/40 ring-offset-1",
         data.isSimulating && "animate-pulse",
-        // Subtle ring in severity color for affected nodes — draws the eye without changing the node
         isAffected && "ring-1 ring-offset-1",
         isTrigger && "ring-1 ring-[#1a3a6b]/50 ring-offset-1"
       )}
       style={{
-        // Always use type color — never overwrite during simulation
         borderLeftColor: config.borderColor,
-        backgroundColor: "#ffffff",
-        // Severity ring color (applied via ringColor since Tailwind ring-1 is set above)
+        // Subtle type-tinted background — 8% opacity of the border color
+        backgroundColor: `${config.borderColor}0a`,
         ...(isAffected && severityStyle
           ? { ["--tw-ring-color" as string]: `${severityStyle.border}60` }
           : {}),
@@ -57,7 +55,11 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
       />
 
       <div className="flex items-start gap-2">
-        <NodeIcon type={data.nodeType} className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#5a6577]" />
+        <NodeIcon
+          type={data.nodeType}
+          className="mt-0.5 h-3.5 w-3.5 shrink-0"
+          style={{ color: config.borderColor }}
+        />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span
@@ -78,7 +80,7 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
         </div>
       </div>
 
-      {/* Severity badge — the primary simulation indicator */}
+      {/* Severity badge */}
       {isAffected && severityStyle && (
         <div className="mt-2 border-t border-[#e2e6ea] pt-1.5">
           <span
