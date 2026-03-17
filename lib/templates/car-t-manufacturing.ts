@@ -42,6 +42,14 @@ const NODES: TemplateNode[] = [
     positionX: 620,
     positionY: -200,
   },
+  {
+    id: "rm-pbs",
+    type: NodeType.RAW_MATERIAL,
+    label: "RM-101: PBS Buffer (Thermo Fisher)",
+    description: "Phosphate-buffered saline used in cell washing and formulation steps",
+    positionX: -200,
+    positionY: -200,
+  },
 
   // Process Steps (top row) — 400px column gap
   {
@@ -199,6 +207,10 @@ const EDGES: TemplateEdge[] = [
   { id: "e-cryo-eq", sourceNodeId: "ps-cryo", targetNodeId: "eq-freezer", relationship: "uses" },
   { id: "e-cryo-stab", sourceNodeId: "ps-cryo", targetNodeId: "stab-protocol", relationship: "stability tested by" },
   { id: "e-cryo-capa", sourceNodeId: "ps-cryo", targetNodeId: "capa-change", relationship: "tracked by" },
+
+  // Raw Material connections
+  { id: "e-rm-wash", sourceNodeId: "ps-washing", targetNodeId: "rm-pbs", relationship: "uses" },
+  { id: "e-rm-spec", sourceNodeId: "rm-pbs", targetNodeId: "spec-product", relationship: "specified in" },
 
   // SOP → Training Records
   { id: "e-sopw-tra", sourceNodeId: "sop-washing", targetNodeId: "tr-a", relationship: "requires training" },

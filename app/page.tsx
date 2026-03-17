@@ -82,7 +82,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="border-t border-[#e2e6ea] bg-[#f4f5f7] px-8 py-20">
+      <section id="how-it-works" className="border-t border-[#e2e6ea] bg-[#f4f5f7] px-8 py-20">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-center text-3xl font-bold text-[#1a2332]">
             How it works
@@ -141,7 +141,7 @@ export default function LandingPage() {
       </section>
 
       {/* Why This Matters */}
-      <section className="px-8 py-20">
+      <section id="stats" className="px-8 py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold text-[#1a2332]">
             In regulated manufacturing, no change exists in isolation
@@ -153,12 +153,12 @@ export default function LandingPage() {
             amendments. Cascade makes these hidden dependencies visible.
           </p>
         </div>
-        <div className="mx-auto mt-12 flex max-w-3xl items-center justify-center gap-8 md:gap-16">
-          <Stat value="11" label="Document types" />
-          <div className="h-8 w-px bg-[#e2e6ea]" />
-          <Stat value="36" label="Cascade rules" />
-          <div className="h-8 w-px bg-[#e2e6ea]" />
-          <Stat value="3" label="Change categories" />
+        <div className="mx-auto mt-12 flex max-w-4xl items-start justify-center gap-8 md:gap-12">
+          <Stat value="11" label="Document types" detail="SOPs, batch records, training, validation, specs, stability, and more" />
+          <div className="mt-2 h-12 w-px bg-[#e2e6ea]" />
+          <Stat value="36" label="Cascade rules" detail="Category-aware severity mapping per FDA SUPAC guidelines" />
+          <div className="mt-2 h-12 w-px bg-[#e2e6ea]" />
+          <Stat value="3" label="Change categories" detail="Minor, Moderate, Major — each triggers different regulatory filings" />
         </div>
       </section>
 
@@ -198,11 +198,14 @@ export default function LandingPage() {
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function Stat({ value, label, detail }: { value: string; label: string; detail?: string }) {
   return (
-    <div className="text-center">
+    <div className="flex-1 text-center">
       <p className="text-3xl font-bold text-[#1a3a6b]">{value}</p>
-      <p className="mt-1 text-sm text-[#5a6577]">{label}</p>
+      <p className="mt-1 text-sm font-medium text-[#5a6577]">{label}</p>
+      {detail && (
+        <p className="mx-auto mt-1.5 max-w-[180px] text-[11px] leading-snug text-[#8b95a5]">{detail}</p>
+      )}
     </div>
   );
 }

@@ -22,7 +22,8 @@
 - ChangeSelector: modal overlay with numbered steps + progressive disclosure for process steps, textarea fallback for custom nodes
 - Badge-only severity: keep node type colors constant, add severity badge in footer + subtle ring outline
 - SimulationLegend: collapsible panel at top-left with grid layout (80px badge column + description) explaining severity, edges, trigger in plain English
-- React Flow Controls at top-right, legend at top-left — always visible regardless of graph size
+- GraphGuide: pre-simulation collapsible panel explaining the graph (node types, connections, how to start). Swaps to SimulationLegend on simulation start
+- React Flow Controls at top-right, legend/guide at top-left — always visible regardless of graph size
 
 ## Patterns That Don't Work
 - Changing node colors to indicate severity — destroys node type identity, confusing for non-domain users
@@ -36,11 +37,12 @@
 - AI: OpenRouter + Gemini 2.0 Flash for regulatory explanations
 - Cascade rules are hardcoded (not AI-dependent) — AI only generates explanations
 - Rules are category-aware: Minor/Moderate/Major per FDA SUPAC, ~36 rules with regulatoryAction strings
-- Pre-built CAR-T template: 17 nodes, 28 edges, 7 pre-defined changes with defaultCategory
+- Pre-built CAR-T template: 18 nodes (added Raw Material: PBS Buffer), 30 edges, 7 pre-defined changes with defaultCategory
 - ChangeCategory enum (MINOR/MODERATE/MAJOR) drives severity differentiation per source→target pair
 - 11 NodeTypes: original 8 + SPECIFICATION, STABILITY_PROTOCOL, RAW_MATERIAL
 - AI prompt references 21 CFR 314.70, SUPAC, ICH Q12, ICH Q8(R2), ICH Q1A/Q5C
 - CascadeEdge: dash 6 6, speed 1s, opacity 60%
 - SimulationPanel shows "Filing:" line with regulatory action from cascade rules
+- Markdown export includes change category (FDA SUPAC) and Filing lines per impact
 - No auth, no tests, no test runner, no CI — pure demo
 - Hosting: Vercel, auto-deploys from main

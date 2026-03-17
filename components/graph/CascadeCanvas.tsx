@@ -67,6 +67,7 @@ export function CascadeCanvas({
   const [simulationOpen, setSimulationOpen] = useState(false);
   const [simulationComplete, setSimulationComplete] = useState(false);
   const [changeDescription, setChangeDescription] = useState("");
+  const [changeCategoryLabel, setChangeCategoryLabel] = useState("");
   const [triggerLabel, setTriggerLabel] = useState("");
   const [impacts, setImpacts] = useState<ImpactCard[]>([]);
   const [isSimulating, setIsSimulating] = useState(false);
@@ -158,6 +159,7 @@ export function CascadeCanvas({
       setSimulationOpen(true);
       setSimulationComplete(false);
       setChangeDescription(change.description);
+      setChangeCategoryLabel(change.changeCategory ? change.changeCategory.toUpperCase() : "MODERATE");
       setImpacts([]);
 
       const triggerNode = nodes.find((n) => n.id === selectedNodeId);
@@ -343,6 +345,7 @@ export function CascadeCanvas({
       `**Workflow:** ${workflowName}`,
       `**Date:** ${new Date().toISOString().split("T")[0]}`,
       `**Change:** ${changeDescription}`,
+      `**Category:** ${changeCategoryLabel} (FDA SUPAC)`,
       `**Trigger Node:** ${triggerLabel}`,
       ``,
       `---`,
@@ -354,6 +357,9 @@ export function CascadeCanvas({
     for (const impact of impacts) {
       lines.push(`### ${impact.nodeLabel}`);
       lines.push(`**Severity:** ${impact.severity.toUpperCase()}`);
+      if (impact.regulatoryAction) {
+        lines.push(`**Filing:** ${impact.regulatoryAction}`);
+      }
       if (impact.explanation) {
         lines.push(`\n${impact.explanation}`);
       }
@@ -377,7 +383,7 @@ export function CascadeCanvas({
     a.download = `cascade-report-${Date.now()}.md`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [workflowName, changeDescription, triggerLabel, impacts]);
+  }, [workflowName, changeDescription, changeCategoryLabel, triggerLabel, impacts]);
 
   return (
     <div className="flex h-full">
@@ -437,8 +443,8 @@ export function CascadeCanvas({
           </div>
         )}
 
-        {/* Simulation legend */}
-        {simulationOpen && <SimulationLegend />}
+        {/* Guide / Legend */}
+        {simulationOpen ? <SimulationLegend /> : nodes.length > 0 && <GraphGuide />}
       </div>
 
       <SimulationPanel
@@ -467,6 +473,89 @@ export function CascadeCanvas({
         onUpdate={(updates) => editingNodeId && updateNodeData(editingNodeId, updates)}
         onClose={() => setEditingNodeId(null)}
       />
+    </div>
+  );
+}
+
+function GraphGuide() {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <div className="absolute left-3 top-4 z-20 w-[320px]">
+      <div className="rounded-xl border border-[#e2e6ea] bg-white/95 shadow-md backdrop-blur-sm">
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="flex w-full items-center justify-between px-4 py-3 text-left"
+        >
+          <span className="text-sm font-semibold text-[#1a2332]">What you&apos;re looking at</span>
+          <svg
+            className={`h-4 w-4 text-[#8b95a5] transition-transform ${collapsed ? "-rotate-90" : ""}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {!collapsed && (
+          <div className="border-t border-[#e2e6ea] px-4 pb-4 pt-3">
+            <p className="text-xs leading-relaxed text-[#5a6577]">
+              This is a <strong className="text-[#1a2332]">regulated manufacturing workflow</strong>. Each card is a document or system in the quality management chain. The lines between them show dependencies — if one changes, the connected ones may need updating too.
+            </p>
+
+            <div className="mt-3 border-t border-[#e2e6ea] pt-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+                Node types
+              </p>
+              <div className="mt-2 space-y-1.5">
+                <GuideRow color="#1a3a6b" label="Process Step" description="A manufacturing operation — click to simulate a change" />
+                <GuideRow color="#2d5a3d" label="SOP" description="Standard Operating Procedure governing a step" />
+                <GuideRow color="#6b5b2d" label="Training" description="Operator certification records" />
+                <GuideRow color="#4a3d6b" label="Batch Record" description="Production documentation template" />
+                <GuideRow color="#6b2d3d" label="Validation" description="Proof the process works consistently" />
+                <GuideRow color="#3d2d5a" label="Regulatory" description="FDA filing (the final downstream impact)" />
+              </div>
+            </div>
+
+            <div className="mt-3 border-t border-[#e2e6ea] pt-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+                Connections
+              </p>
+              <div className="mt-2 grid grid-cols-[80px_1fr] items-center gap-x-3">
+                <svg className="h-3 w-full" viewBox="0 0 80 12" preserveAspectRatio="none">
+                  <line x1="0" y1="6" x2="80" y2="6" stroke="#c8cdd4" strokeWidth="1.5" />
+                </svg>
+                <span className="text-xs leading-snug text-[#5a6577]">
+                  A dependency — one document relies on or feeds into another
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-3 border-t border-[#e2e6ea] pt-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+                Try it
+              </p>
+              <p className="mt-1.5 text-xs leading-relaxed text-[#5a6577]">
+                Click any <strong className="text-[#1a3a6b]">Process Step</strong> node to simulate a change and watch the impact cascade through the system.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function GuideRow({ color, label, description }: { color: string; label: string; description: string }) {
+  return (
+    <div className="grid grid-cols-[80px_1fr] items-center gap-x-3">
+      <div className="flex items-center gap-1.5">
+        <span className="h-2.5 w-[3px] rounded-full" style={{ backgroundColor: color }} />
+        <span className="text-[11px] font-semibold text-[#1a2332]">{label}</span>
+      </div>
+      <span className="text-[11px] leading-snug text-[#5a6577]">{description}</span>
     </div>
   );
 }
