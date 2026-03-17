@@ -11,6 +11,7 @@ export interface ImpactCard {
   regulationReference?: string;
   recommendedAction?: string;
   severityJustification?: string;
+  regulatoryAction?: string;
   error?: string;
   loading?: boolean;
 }
@@ -155,6 +156,15 @@ function ImpactCardComponent({ impact }: { impact: ImpactCard }) {
               <span className="mt-px text-[10px] text-[#8b95a5]">§</span>
               <span className="text-[11px] font-medium text-[#1a2332]">
                 {impact.regulationReference}
+              </span>
+            </div>
+          )}
+
+          {impact.regulatoryAction && (
+            <div className="flex items-start gap-1.5">
+              <span className="mt-px text-[10px] font-medium text-[#8b95a5]">Filing:</span>
+              <span className="text-[11px] font-medium text-[#1a2332]">
+                {impact.regulatoryAction}
               </span>
             </div>
           )}

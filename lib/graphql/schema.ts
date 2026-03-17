@@ -11,6 +11,9 @@ export const typeDefs = `#graphql
     validation_protocol
     capa
     regulatory_submission
+    specification
+    stability_protocol
+    raw_material
   }
 
   enum Severity {

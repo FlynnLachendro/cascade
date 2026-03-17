@@ -12,6 +12,8 @@ interface ImpactAnalysis {
 
 export async function analyzeImpact(params: {
   changeDescription: string;
+  changeCategory: string;
+  regulatoryAction: string;
   triggerNodeLabel: string;
   triggerNodeType: string;
   impactedNodeLabel: string;

@@ -27,6 +27,12 @@
 - DB: Turso (LibSQL/SQLite edge) — file:local.db for dev, libsql:// for prod
 - AI: OpenRouter + Gemini 2.0 Flash for regulatory explanations
 - Cascade rules are hardcoded (not AI-dependent) — AI only generates explanations
-- Pre-built CAR-T template: 15 nodes, 22 edges, 8 pre-defined changes
-- No auth, no tests, no CI — pure demo, ship in 3 days
+- Rules are now category-aware: Minor/Moderate/Major per FDA SUPAC, ~36 rules with regulatoryAction strings
+- Pre-built CAR-T template: 17 nodes (added Specification + Stability Protocol), 28 edges, 7 pre-defined changes with defaultCategory
+- ChangeCategory enum (MINOR/MODERATE/MAJOR) drives severity differentiation per source→target pair
+- 3 new NodeTypes: SPECIFICATION, STABILITY_PROTOCOL, RAW_MATERIAL
+- AI prompt references 21 CFR 314.70, SUPAC, ICH Q12, ICH Q8(R2) — removed EU GMP Annex 11 and Part 11
+- CascadeEdge softened: dash 6 6, speed 1s, opacity 60%
+- SimulationPanel shows "Filing:" line with regulatory action from cascade rules
+- No auth, no tests, no test runner, no CI — pure demo
 - Flynn's hosting defaults: Vercel (FE), Supabase not used here (Turso instead)

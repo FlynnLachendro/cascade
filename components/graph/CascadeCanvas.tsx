@@ -21,7 +21,7 @@ import { NodeSidebar } from "./NodeSidebar";
 import { SimulationPanel, type ImpactCard } from "../panels/SimulationPanel";
 import { ChangeSelector } from "../panels/ChangeSelector";
 import { NodeEditorPanel } from "../panels/NodeEditorPanel";
-import { NodeType, type Severity, type WorkflowNode, type WorkflowEdge, NODE_CONFIGS } from "@/types";
+import { NodeType, type Severity, type WorkflowNode, type WorkflowEdge, NODE_CONFIGS, type ChangeCategory } from "@/types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nodeTypes = { gxp: GxPNode } as any;
@@ -152,7 +152,7 @@ export function CascadeCanvas({
   );
 
   const runSimulation = useCallback(
-    async (change: { label: string; description: string }) => {
+    async (change: { label: string; description: string; changeCategory?: ChangeCategory }) => {
       setShowChangeSelector(false);
       setIsSimulating(true);
       setSimulationOpen(true);
@@ -191,6 +191,7 @@ export function CascadeCanvas({
           body: JSON.stringify({
             triggerNodeId: selectedNodeId,
             changeDescription: change.description,
+            changeCategory: change.changeCategory,
             nodes: workflowNodes,
             edges: workflowEdges,
           }),
@@ -254,6 +255,7 @@ export function CascadeCanvas({
                   nodeId: data.nodeId,
                   nodeLabel: nodeData?.label || "Unknown",
                   severity: data.severity,
+                  regulatoryAction: data.regulatoryAction,
                   loading: true,
                 },
               ]);
@@ -269,6 +271,7 @@ export function CascadeCanvas({
                         regulationReference: data.regulationReference,
                         recommendedAction: data.recommendedAction,
                         severityJustification: data.severityJustification,
+                        regulatoryAction: data.regulatoryAction || imp.regulatoryAction,
                         loading: false,
                       }
                     : imp

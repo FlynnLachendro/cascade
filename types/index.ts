@@ -7,6 +7,15 @@ export enum NodeType {
   VALIDATION_PROTOCOL = "validation_protocol",
   CAPA = "capa",
   REGULATORY_SUBMISSION = "regulatory_submission",
+  SPECIFICATION = "specification",
+  STABILITY_PROTOCOL = "stability_protocol",
+  RAW_MATERIAL = "raw_material",
+}
+
+export enum ChangeCategory {
+  MINOR = "minor",
+  MODERATE = "moderate",
+  MAJOR = "major",
 }
 
 export enum Severity {
@@ -58,7 +67,9 @@ export interface Workflow {
 export interface CascadeRule {
   sourceType: NodeType;
   targetType: NodeType;
+  category: ChangeCategory;
   severity: Severity;
+  regulatoryAction: string;
   reason: string;
 }
 
@@ -69,6 +80,7 @@ export interface SimulationImpact {
   aiExplanation: string;
   regulationReference: string;
   recommendedAction: string;
+  regulatoryAction?: string;
 }
 
 export interface Simulation {
@@ -84,6 +96,7 @@ export interface PredefinedChange {
   id: string;
   label: string;
   description: string;
+  defaultCategory?: ChangeCategory;
 }
 
 export const NODE_CONFIGS: Record<NodeType, NodeConfig> = {
@@ -150,6 +163,30 @@ export const NODE_CONFIGS: Record<NodeType, NodeConfig> = {
     borderColor: "#3d2d5a",
     icon: "▪",
     description: "Regulatory filing documentation",
+  },
+  [NodeType.SPECIFICATION]: {
+    type: NodeType.SPECIFICATION,
+    label: "Specification",
+    color: "#ffffff",
+    borderColor: "#4a5568",
+    icon: "▪",
+    description: "Product or process specification",
+  },
+  [NodeType.STABILITY_PROTOCOL]: {
+    type: NodeType.STABILITY_PROTOCOL,
+    label: "Stability Protocol",
+    color: "#ffffff",
+    borderColor: "#5a3d6b",
+    icon: "▪",
+    description: "Stability testing protocol",
+  },
+  [NodeType.RAW_MATERIAL]: {
+    type: NodeType.RAW_MATERIAL,
+    label: "Raw Material",
+    color: "#ffffff",
+    borderColor: "#6b4a2d",
+    icon: "▪",
+    description: "Raw material or component specification",
   },
 };
 

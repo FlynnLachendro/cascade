@@ -66,5 +66,26 @@ export function NodeIcon({ type, className = "h-4 w-4" }: NodeIconProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
         </svg>
       );
+    case NodeType.SPECIFICATION:
+      // Clipboard with checkmark
+      return (
+        <svg {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15a2.25 2.25 0 011.65 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 3.98 8.25 4.652 8.25 5.605v1.145m5.8-2.914c.376.023.75.05 1.124.08 .631.064 1.476.736 1.476 1.689v1.145m-10.155.003c-.24.0-.477.01-.713.024C5.351 5.89 4.5 6.562 4.5 7.52v9.23c0 .958.851 1.63 1.482 1.694.63.064 1.27.113 1.918.148m10.2 0c.646-.035 1.285-.084 1.917-.148.632-.064 1.483-.736 1.483-1.694V7.52c0-.958-.851-1.63-1.483-1.694a39.56 39.56 0 00-.713-.024M9.75 15l2.25 2.25L16.5 12" />
+        </svg>
+      );
+    case NodeType.STABILITY_PROTOCOL:
+      // Clock/timer
+      return (
+        <svg {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+    case NodeType.RAW_MATERIAL:
+      // Cube/box
+      return (
+        <svg {...props}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+      );
   }
 }

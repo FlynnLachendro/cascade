@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { runCascade } from "@/lib/cascade/simulate";
 import { analyzeImpact } from "@/lib/ai/stream";
-import { NODE_CONFIGS } from "@/types";
+import { NODE_CONFIGS, ChangeCategory } from "@/types";
 import type { WorkflowNode, WorkflowEdge } from "@/types";
 
 export async function POST(req: NextRequest) {
@@ -9,11 +9,13 @@ export async function POST(req: NextRequest) {
   const {
     triggerNodeId,
     changeDescription,
+    changeCategory,
     nodes,
     edges,
   }: {
     triggerNodeId: string;
     changeDescription: string;
+    changeCategory?: string;
     nodes: WorkflowNode[];
     edges: WorkflowEdge[];
   } = body;
@@ -25,7 +27,8 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const impacts = runCascade(triggerNodeId, nodes, edges);
+  const category = (changeCategory as ChangeCategory) || ChangeCategory.MODERATE;
+  const impacts = runCascade(triggerNodeId, nodes, edges, category);
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -51,6 +54,7 @@ export async function POST(req: NextRequest) {
               type: "cascade",
               nodeId: impact.nodeId,
               severity: impact.severity,
+              regulatoryAction: impact.regulatoryAction,
               order: impact.order,
             })}\n\n`
           )
@@ -63,6 +67,8 @@ export async function POST(req: NextRequest) {
         try {
           const analysis = await analyzeImpact({
             changeDescription,
+            changeCategory: category,
+            regulatoryAction: impact.regulatoryAction,
             triggerNodeLabel: triggerNode.label,
             triggerNodeType: NODE_CONFIGS[triggerNode.type].label,
             impactedNodeLabel: impact.node.label,
@@ -77,6 +83,7 @@ export async function POST(req: NextRequest) {
                 type: "analysis",
                 nodeId: impact.nodeId,
                 severity: impact.severity,
+                regulatoryAction: impact.regulatoryAction,
                 explanation: analysis.explanation,
                 regulationReference: analysis.regulationReference,
                 recommendedAction: analysis.recommendedAction,

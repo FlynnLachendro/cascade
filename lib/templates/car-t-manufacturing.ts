@@ -1,4 +1,4 @@
-import { NodeType } from "@/types";
+import { NodeType, ChangeCategory } from "@/types";
 import type { PredefinedChange } from "@/types";
 
 interface TemplateNode {
@@ -25,6 +25,24 @@ interface PredefinedChangeSet {
 // ── Nodes ──
 
 const NODES: TemplateNode[] = [
+  // Specification + Stability Protocol (above process steps)
+  {
+    id: "spec-product",
+    type: NodeType.SPECIFICATION,
+    label: "SPEC-001: Product Specification",
+    description: "In-process and release specifications for CAR-T drug substance",
+    positionX: 140,
+    positionY: -200,
+  },
+  {
+    id: "stab-protocol",
+    type: NodeType.STABILITY_PROTOCOL,
+    label: "STAB-005: Stability Protocol",
+    description: "ICH Q5C stability protocol for cryopreserved CAR-T product",
+    positionX: 620,
+    positionY: -200,
+  },
+
   // Process Steps (top row) — 400px column gap
   {
     id: "ps-washing",
@@ -164,17 +182,23 @@ const EDGES: TemplateEdge[] = [
   { id: "e-wash-br", sourceNodeId: "ps-washing", targetNodeId: "br-template", relationship: "documented in" },
   { id: "e-wash-vp", sourceNodeId: "ps-washing", targetNodeId: "vp-process", relationship: "validated by" },
   { id: "e-wash-eq", sourceNodeId: "ps-washing", targetNodeId: "eq-centrifuge", relationship: "uses" },
+  { id: "e-wash-spec", sourceNodeId: "ps-washing", targetNodeId: "spec-product", relationship: "must meet" },
+  { id: "e-wash-capa", sourceNodeId: "ps-washing", targetNodeId: "capa-change", relationship: "tracked by" },
 
   // Cell Expansion connections
   { id: "e-exp-sop", sourceNodeId: "ps-expansion", targetNodeId: "sop-expansion", relationship: "governed by" },
   { id: "e-exp-br", sourceNodeId: "ps-expansion", targetNodeId: "br-template", relationship: "documented in" },
   { id: "e-exp-vp", sourceNodeId: "ps-expansion", targetNodeId: "vp-process", relationship: "validated by" },
+  { id: "e-exp-spec", sourceNodeId: "ps-expansion", targetNodeId: "spec-product", relationship: "must meet" },
+  { id: "e-exp-capa", sourceNodeId: "ps-expansion", targetNodeId: "capa-change", relationship: "tracked by" },
 
   // Cryopreservation connections
   { id: "e-cryo-sop", sourceNodeId: "ps-cryo", targetNodeId: "sop-cryo", relationship: "governed by" },
   { id: "e-cryo-br", sourceNodeId: "ps-cryo", targetNodeId: "br-template", relationship: "documented in" },
   { id: "e-cryo-vp", sourceNodeId: "ps-cryo", targetNodeId: "vp-process", relationship: "validated by" },
   { id: "e-cryo-eq", sourceNodeId: "ps-cryo", targetNodeId: "eq-freezer", relationship: "uses" },
+  { id: "e-cryo-stab", sourceNodeId: "ps-cryo", targetNodeId: "stab-protocol", relationship: "stability tested by" },
+  { id: "e-cryo-capa", sourceNodeId: "ps-cryo", targetNodeId: "capa-change", relationship: "tracked by" },
 
   // SOP → Training Records
   { id: "e-sopw-tra", sourceNodeId: "sop-washing", targetNodeId: "tr-a", relationship: "requires training" },
@@ -182,10 +206,11 @@ const EDGES: TemplateEdge[] = [
   { id: "e-sope-trb", sourceNodeId: "sop-expansion", targetNodeId: "tr-b", relationship: "requires training" },
   { id: "e-sopc-trc", sourceNodeId: "sop-cryo", targetNodeId: "tr-c", relationship: "requires training" },
 
-  // SOP → CAPA
-  { id: "e-sopw-capa", sourceNodeId: "sop-washing", targetNodeId: "capa-change", relationship: "tracked by" },
-  { id: "e-sope-capa", sourceNodeId: "sop-expansion", targetNodeId: "capa-change", relationship: "tracked by" },
-  { id: "e-sopc-capa", sourceNodeId: "sop-cryo", targetNodeId: "capa-change", relationship: "tracked by" },
+  // Specification → Regulatory
+  { id: "e-spec-reg", sourceNodeId: "spec-product", targetNodeId: "reg-ind", relationship: "referenced in" },
+
+  // Stability → Regulatory
+  { id: "e-stab-reg", sourceNodeId: "stab-protocol", targetNodeId: "reg-ind", relationship: "supports" },
 
   // Validation → Regulatory
   { id: "e-vp-reg", sourceNodeId: "vp-process", targetNodeId: "reg-ind", relationship: "referenced in" },
@@ -204,23 +229,23 @@ const PREDEFINED_CHANGES: PredefinedChangeSet[] = [
   {
     nodeId: "ps-washing",
     changes: [
-      { id: "wash-temp", label: "Change washing temperature (4°C → 8°C)", description: "Modifying the cell washing temperature from 4°C to 8°C to improve cell recovery" },
-      { id: "wash-speed", label: "Change centrifugation speed (300g → 400g)", description: "Increasing centrifugation speed to improve cell pellet formation" },
-      { id: "wash-buffer", label: "Substitute washing buffer supplier", description: "Switching PBS buffer supplier from Sigma-Aldrich to Thermo Fisher" },
+      { id: "wash-temp", label: "Change washing temperature (4°C → 8°C)", description: "Modifying the cell washing temperature from 4°C to 8°C to improve cell recovery", defaultCategory: ChangeCategory.MODERATE },
+      { id: "wash-speed", label: "Change centrifugation speed (300g → 400g)", description: "Increasing centrifugation speed to improve cell pellet formation", defaultCategory: ChangeCategory.MINOR },
+      { id: "wash-buffer", label: "Substitute washing buffer supplier", description: "Switching PBS buffer supplier from Sigma-Aldrich to Thermo Fisher", defaultCategory: ChangeCategory.MAJOR },
     ],
   },
   {
     nodeId: "ps-expansion",
     changes: [
-      { id: "exp-duration", label: "Extend culture duration (9 → 12 days)", description: "Extending T-cell expansion culture from 9 to 12 days to increase cell yield" },
-      { id: "exp-media", label: "Change media formulation", description: "Switching from X-VIVO 15 to OpTmizer complete media for cell expansion" },
+      { id: "exp-duration", label: "Extend culture duration (9 → 12 days)", description: "Extending T-cell expansion culture from 9 to 12 days to increase cell yield", defaultCategory: ChangeCategory.MODERATE },
+      { id: "exp-media", label: "Change media formulation", description: "Switching from X-VIVO 15 to OpTmizer complete media for cell expansion", defaultCategory: ChangeCategory.MAJOR },
     ],
   },
   {
     nodeId: "ps-cryo",
     changes: [
-      { id: "cryo-conc", label: "Change cryoprotectant concentration", description: "Reducing DMSO concentration from 10% to 7.5% to decrease post-thaw toxicity" },
-      { id: "cryo-profile", label: "Modify controlled-rate freezing profile", description: "Adjusting cooling rate from -1°C/min to -2°C/min in the nucleation phase" },
+      { id: "cryo-conc", label: "Change cryoprotectant concentration", description: "Reducing DMSO concentration from 10% to 7.5% to decrease post-thaw toxicity", defaultCategory: ChangeCategory.MODERATE },
+      { id: "cryo-profile", label: "Modify controlled-rate freezing profile", description: "Adjusting cooling rate from -1°C/min to -2°C/min in the nucleation phase", defaultCategory: ChangeCategory.MINOR },
     ],
   },
 ];

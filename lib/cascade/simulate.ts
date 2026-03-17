@@ -1,5 +1,5 @@
 import type { WorkflowNode, WorkflowEdge } from "@/types";
-import { Severity } from "@/types";
+import { Severity, ChangeCategory } from "@/types";
 import { findApplicableRule } from "./rules";
 
 export interface CascadeImpact {
@@ -7,6 +7,7 @@ export interface CascadeImpact {
   node: WorkflowNode;
   severity: Severity;
   reason: string;
+  regulatoryAction: string;
   sourceNodeId: string;
   order: number;
 }
@@ -14,7 +15,8 @@ export interface CascadeImpact {
 export function runCascade(
   triggerNodeId: string,
   nodes: WorkflowNode[],
-  edges: WorkflowEdge[]
+  edges: WorkflowEdge[],
+  changeCategory: ChangeCategory = ChangeCategory.MODERATE
 ): CascadeImpact[] {
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
   const triggerNode = nodeMap.get(triggerNodeId);
@@ -44,7 +46,7 @@ export function runCascade(
     const sourceNode = nodeMap.get(current.sourceNodeId);
     if (!currentNode || !sourceNode) continue;
 
-    const rule = findApplicableRule(sourceNode.type, currentNode.type);
+    const rule = findApplicableRule(sourceNode.type, currentNode.type, changeCategory);
     if (!rule) continue;
 
     impacts.push({
@@ -52,6 +54,7 @@ export function runCascade(
       node: currentNode,
       severity: rule.severity,
       reason: rule.reason,
+      regulatoryAction: rule.regulatoryAction,
       sourceNodeId: current.sourceNodeId,
       order: order++,
     });
