@@ -4,21 +4,24 @@ import { useState, useEffect } from "react";
 import { getPredefinedChanges } from "@/lib/templates/car-t-manufacturing";
 import { ChangeCategory, type PredefinedChange } from "@/types";
 
-const CATEGORY_OPTIONS: { value: ChangeCategory; label: string; description: string }[] = [
+const CATEGORY_OPTIONS: { value: ChangeCategory; label: string; plain: string; filing: string }[] = [
   {
     value: ChangeCategory.MINOR,
     label: "Minor",
-    description: "Within validated range — Annual Report filing",
+    plain: "Small tweak, still within the already-approved range",
+    filing: "Annual Report",
   },
   {
     value: ChangeCategory.MODERATE,
     label: "Moderate",
-    description: "May affect quality — CBE-30 supplement",
+    plain: "Could affect product quality — needs evaluation",
+    filing: "CBE-30",
   },
   {
     value: ChangeCategory.MAJOR,
     label: "Major",
-    description: "Significant impact — Prior Approval Supplement",
+    plain: "Fundamental change — FDA must approve before you proceed",
+    filing: "Prior Approval (PAS)",
   },
 ];
 
@@ -62,9 +65,8 @@ export function ChangeSelector({
 
   if (!isOpen) return null;
 
-  const canConfirm = hasPredefined
-    ? selectedId !== null && category !== null
-    : customText.trim() !== "" && category !== null;
+  const hasStep1 = hasPredefined ? selectedId !== null : customText.trim() !== "";
+  const canConfirm = hasStep1 && category !== null;
 
   const handleConfirm = () => {
     if (!category) return;
@@ -83,55 +85,67 @@ export function ChangeSelector({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+      <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl">
         <h3 className="text-base font-semibold text-[#1a2332]">
-          Simulate Change
+          Simulate Change on <span className="text-[#1a3a6b]">{nodeLabel}</span>
         </h3>
-        <p className="mt-1 text-sm text-[#5a6577]">
-          Select a change to simulate on <strong>{nodeLabel}</strong>
+        <p className="mt-1 text-[13px] text-[#5a6577]">
+          Choose what&apos;s changing and how significant it is. The cascade engine uses both to determine which documents, systems, and filings are affected.
         </p>
 
-        <div className="mt-4 space-y-2">
-          {hasPredefined ? (
-            predefined.map((change) => (
-              <button
-                key={change.id}
-                onClick={() => setSelectedId(change.id)}
-                className={`w-full rounded-lg border px-4 py-3 text-left transition-all ${
-                  selectedId === change.id
-                    ? "border-[#1a3a6b] bg-[#f0f3f8] ring-1 ring-[#1a3a6b]"
-                    : "border-[#e2e6ea] hover:border-[#c8cdd4] hover:bg-[#f9fafb]"
-                }`}
-              >
-                <p className="text-sm font-medium text-[#1a2332]">
-                  {change.label}
-                </p>
-                <p className="mt-0.5 text-xs text-[#5a6577]">
-                  {change.description}
-                </p>
-              </button>
-            ))
-          ) : (
-            <div>
-              <label className="text-sm font-medium text-[#1a2332]">
-                Describe the change
-              </label>
-              <textarea
-                value={customText}
-                onChange={(e) => setCustomText(e.target.value)}
-                placeholder="e.g., Change mixing speed from 200 RPM to 350 RPM"
-                className="mt-1.5 h-24 w-full resize-none rounded-lg border border-[#e2e6ea] px-3 py-2 text-sm text-[#1a2332] placeholder:text-[#8b95a5] focus:border-[#1a3a6b] focus:outline-none focus:ring-1 focus:ring-[#1a3a6b]"
-              />
-            </div>
-          )}
+        {/* Step 1 */}
+        <div className="mt-5">
+          <div className="flex items-center gap-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1a3a6b] text-[10px] font-bold text-white">1</span>
+            <p className="text-sm font-semibold text-[#1a2332]">What&apos;s changing?</p>
+          </div>
+          <div className="ml-7 mt-2 space-y-2">
+            {hasPredefined ? (
+              predefined.map((change) => (
+                <button
+                  key={change.id}
+                  onClick={() => setSelectedId(change.id)}
+                  className={`w-full rounded-lg border px-4 py-3 text-left transition-all ${
+                    selectedId === change.id
+                      ? "border-[#1a3a6b] bg-[#f0f3f8] ring-1 ring-[#1a3a6b]"
+                      : "border-[#e2e6ea] hover:border-[#c8cdd4] hover:bg-[#f9fafb]"
+                  }`}
+                >
+                  <p className="text-sm font-medium text-[#1a2332]">
+                    {change.label}
+                  </p>
+                  <p className="mt-0.5 text-xs text-[#5a6577]">
+                    {change.description}
+                  </p>
+                </button>
+              ))
+            ) : (
+              <div>
+                <label className="text-sm font-medium text-[#1a2332]">
+                  Describe the change
+                </label>
+                <textarea
+                  value={customText}
+                  onChange={(e) => setCustomText(e.target.value)}
+                  placeholder="e.g., Change mixing speed from 200 RPM to 350 RPM"
+                  className="mt-1.5 h-24 w-full resize-none rounded-lg border border-[#e2e6ea] px-3 py-2 text-sm text-[#1a2332] placeholder:text-[#8b95a5] focus:border-[#1a3a6b] focus:outline-none focus:ring-1 focus:ring-[#1a3a6b]"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Change category picker */}
-        <div className="mt-4">
-          <p className="text-xs font-medium uppercase tracking-wider text-[#8b95a5]">
-            Change Category (SUPAC)
+        {/* Step 2 — category picker */}
+        <div className={`mt-5 transition-opacity duration-200 ${hasStep1 ? "opacity-100" : "pointer-events-none opacity-40"}`}>
+          <div className="flex items-center gap-2">
+            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white ${hasStep1 ? "bg-[#1a3a6b]" : "bg-[#c8cdd4]"}`}>2</span>
+            <p className="text-sm font-semibold text-[#1a2332]">How significant is this change?</p>
+          </div>
+          <p className="ml-7 mt-1 text-[11px] leading-relaxed text-[#8b95a5]">
+            The same physical change can have different regulatory consequences depending on its scope.
+            The FDA classifies changes into three categories — this determines what paperwork is required.
           </p>
-          <div className="mt-2 flex gap-2">
+          <div className="ml-7 mt-2.5 flex gap-2">
             {CATEGORY_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
@@ -146,7 +160,10 @@ export function ChangeSelector({
                   {opt.label}
                 </p>
                 <p className="mt-0.5 text-[10px] leading-tight text-[#5a6577]">
-                  {opt.description}
+                  {opt.plain}
+                </p>
+                <p className="mt-1 text-[9px] font-medium text-[#1a3a6b]">
+                  {opt.filing}
                 </p>
               </button>
             ))}

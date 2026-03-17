@@ -88,14 +88,14 @@ export default function LandingPage() {
             How it works
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-center text-base text-[#5a6577]">
-            Model your regulated workflow, trigger a change, and watch the
-            consequences propagate in real time.
+            Model your regulated workflow, classify a change by FDA category,
+            and watch the consequences propagate in real time.
           </p>
           <div className="mt-14 space-y-16">
             <WalkthroughStep
               step="Build"
               title="Model your manufacturing workflow"
-              description="Drag and connect 8 GxP document types — process steps, SOPs, training records, batch records, equipment qualifications, validation protocols, CAPAs, and regulatory submissions — to map out your manufacturing dependencies."
+              description="Drag and connect GxP document types — process steps, SOPs, training records, batch records, equipment qualifications, validation protocols, specifications, stability protocols, CAPAs, and regulatory submissions — to map your manufacturing dependencies."
               visual={
                 <div className="flex items-center gap-3">
                   <NodePreview label="Cell Washing" type="Process Step" color="#1a3a6b" />
@@ -109,7 +109,7 @@ export default function LandingPage() {
             <WalkthroughStep
               step="Simulate"
               title="Trigger a process change"
-              description="Select any process step and define a change — a temperature adjustment, a reagent substitution, a protocol modification. Choose from pre-defined changes or describe your own."
+              description="Select any process step and define a change — a temperature adjustment, a reagent substitution, a protocol modification. Then classify it as Minor, Moderate, or Major per FDA SUPAC guidelines. The category determines which regulatory filings are required."
               visual={
                 <div className="rounded-lg border border-[#e2e6ea] bg-white p-4">
                   <p className="text-xs font-medium text-[#8b95a5]">Select a change to simulate on <span className="font-semibold text-[#1a2332]">Cell Washing</span></p>
@@ -127,12 +127,12 @@ export default function LandingPage() {
             <WalkthroughStep
               step="Trace"
               title="See the cascading impact"
-              description="Watch impacts propagate through your workflow in real time. Each affected node receives an AI-generated regulatory analysis with specific citations from 21 CFR, ICH Q10, EU GMP Annex 11, and more."
+              description="Watch impacts propagate through your workflow in real time. Nodes keep their type colors — severity badges appear on each affected node so you can see what changed at a glance. Each impact includes AI-generated regulatory analysis with citations from 21 CFR 314.70, SUPAC, ICH Q12, and more."
               visual={
-                <div className="space-y-2">
-                  <ImpactPreview severity="high" color="#c4553a" label="SOP-0042: Cell Washing Procedure" reg="21 CFR 211.100" />
-                  <ImpactPreview severity="critical" color="#9b2c2c" label="VP-015: Process Validation" reg="21 CFR 211.186" />
-                  <ImpactPreview severity="medium" color="#b8860b" label="EQ-009: Centrifuge OQ" reg="21 CFR 211.68" />
+                <div className="space-y-2.5">
+                  <NodeWithBadge label="SOP-0042: Cell Washing" type="SOP" typeColor="#2d5a3d" severity="high" severityColor="#c4553a" />
+                  <NodeWithBadge label="VP-015: Process Validation" type="Validation Protocol" typeColor="#6b2d3d" severity="critical" severityColor="#9b2c2c" />
+                  <NodeWithBadge label="EQ-009: Centrifuge OQ" type="Equipment Qual." typeColor="#5a4a2d" severity="medium" severityColor="#b8860b" />
                 </div>
               }
             />
@@ -154,11 +154,11 @@ export default function LandingPage() {
           </p>
         </div>
         <div className="mx-auto mt-12 flex max-w-3xl items-center justify-center gap-8 md:gap-16">
-          <Stat value="8" label="Document types" />
+          <Stat value="11" label="Document types" />
           <div className="h-8 w-px bg-[#e2e6ea]" />
-          <Stat value="9" label="Cascade rules" />
+          <Stat value="36" label="Cascade rules" />
           <div className="h-8 w-px bg-[#e2e6ea]" />
-          <Stat value="7" label="Regulatory frameworks" />
+          <Stat value="3" label="Change categories" />
         </div>
       </section>
 
@@ -256,22 +256,24 @@ function Arrow() {
   );
 }
 
-function ImpactPreview({ severity, color, label, reg }: { severity: string; color: string; label: string; reg: string }) {
+function NodeWithBadge({ label, type, typeColor, severity, severityColor }: { label: string; type: string; typeColor: string; severity: string; severityColor: string }) {
   return (
     <div
-      className="flex items-center justify-between rounded-lg border-l-[3px] bg-white px-4 py-3 shadow-[0_1px_3px_rgba(0,0,0,0.05)]"
-      style={{ borderLeftColor: color }}
+      className="rounded-md border-l-[3px] bg-white px-3 py-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
+      style={{ borderLeftColor: typeColor, boxShadow: `0 0 0 1px ${severityColor}40, 0 1px 3px rgba(0,0,0,0.08)` }}
     >
-      <div className="flex items-center gap-2">
+      <p className="text-[10px] font-medium uppercase tracking-wider" style={{ color: typeColor }}>
+        {type}
+      </p>
+      <p className="mt-0.5 text-sm font-semibold text-[#1a2332]">{label}</p>
+      <div className="mt-1.5 border-t border-[#e2e6ea] pt-1.5">
         <span
-          className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase text-white"
-          style={{ backgroundColor: color }}
+          className="rounded px-1.5 py-0.5 text-[9px] font-bold uppercase text-white"
+          style={{ backgroundColor: severityColor }}
         >
           {severity}
         </span>
-        <span className="text-sm font-medium text-[#1a2332]">{label}</span>
       </div>
-      <span className="text-xs text-[#8b95a5]">§ {reg}</span>
     </div>
   );
 }

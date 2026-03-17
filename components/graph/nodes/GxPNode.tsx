@@ -27,20 +27,27 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
   const config = NODE_CONFIGS[data.nodeType];
   const severityStyle = data.severity ? SEVERITY_COLORS[data.severity] : null;
   const isProcessStep = data.nodeType === NodeType.PROCESS_STEP;
+  const isAffected = data.severity && data.severity !== "trigger";
+  const isTrigger = data.severity === "trigger";
 
   return (
     <div
       className={cn(
         "relative min-w-[180px] max-w-[260px] cursor-default rounded-md border-l-[3px] bg-white px-3 py-2.5 transition-all duration-200 hover:shadow-md",
         selected && "ring-1 ring-[#1a3a6b]/40 ring-offset-1",
-        data.isSimulating && "animate-pulse"
+        data.isSimulating && "animate-pulse",
+        // Subtle ring in severity color for affected nodes — draws the eye without changing the node
+        isAffected && "ring-1 ring-offset-1",
+        isTrigger && "ring-1 ring-[#1a3a6b]/50 ring-offset-1"
       )}
       style={{
-        borderLeftColor: severityStyle?.border || config.borderColor,
-        backgroundColor: severityStyle ? severityStyle.bg : "#ffffff",
-        boxShadow: severityStyle
-          ? `0 2px 8px ${severityStyle.border}25`
-          : undefined,
+        // Always use type color — never overwrite during simulation
+        borderLeftColor: config.borderColor,
+        backgroundColor: "#ffffff",
+        // Severity ring color (applied via ringColor since Tailwind ring-1 is set above)
+        ...(isAffected && severityStyle
+          ? { ["--tw-ring-color" as string]: `${severityStyle.border}60` }
+          : {}),
       }}
     >
       <Handle
@@ -55,25 +62,10 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
           <div className="flex items-center gap-1.5">
             <span
               className="text-[10px] font-medium uppercase tracking-wider"
-              style={{ color: severityStyle?.text || config.borderColor }}
+              style={{ color: config.borderColor }}
             >
               {config.label}
             </span>
-            {data.severity && data.severity !== "trigger" && (
-              <span
-                className={cn(
-                  "rounded px-1 py-0.5 text-[9px] font-bold uppercase",
-                  SEVERITY_COLORS[data.severity].badge
-                )}
-              >
-                {data.severity}
-              </span>
-            )}
-            {data.severity === "trigger" && (
-              <span className="rounded bg-[#1a3a6b] px-1 py-0.5 text-[9px] font-bold uppercase text-white">
-                trigger
-              </span>
-            )}
           </div>
           <p className="mt-0.5 text-sm font-semibold leading-tight text-[#1a2332]">
             {data.label}
@@ -85,6 +77,29 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
           )}
         </div>
       </div>
+
+      {/* Severity badge — the primary simulation indicator */}
+      {isAffected && severityStyle && (
+        <div className="mt-2 border-t border-[#e2e6ea] pt-1.5">
+          <span
+            className={cn(
+              "rounded px-1.5 py-0.5 text-[9px] font-bold uppercase",
+              severityStyle.badge
+            )}
+          >
+            {data.severity}
+          </span>
+        </div>
+      )}
+
+      {/* Trigger badge */}
+      {isTrigger && (
+        <div className="mt-2 border-t border-[#e2e6ea] pt-1.5">
+          <span className="rounded bg-[#1a3a6b] px-1.5 py-0.5 text-[9px] font-bold uppercase text-white">
+            change triggered
+          </span>
+        </div>
+      )}
 
       {isProcessStep && !data.severity && (
         <div className="mt-2 border-t border-[#e2e6ea] pt-1.5">
