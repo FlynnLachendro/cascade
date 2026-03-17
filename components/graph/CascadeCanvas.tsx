@@ -444,9 +444,12 @@ export function CascadeCanvas({
           </div>
         )}
 
-        {/* Guide / Legend */}
-        {simulationOpen ? <SimulationLegend /> : nodes.length > 0 && <GraphGuide />}
+        {/* Simulation legend — top-left during sim only */}
+        {simulationOpen && <SimulationLegend />}
       </div>
+
+      {/* Graph guide — sits in panel position when no simulation is running */}
+      {!simulationOpen && nodes.length > 0 && <GraphGuide />}
 
       <SimulationPanel
         isOpen={simulationOpen}
@@ -482,82 +485,71 @@ function GraphGuide() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="absolute left-3 top-4 z-20 w-[320px]">
-      <div className="rounded-xl border border-[#e2e6ea] bg-white/95 shadow-md backdrop-blur-sm">
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="flex w-full items-center justify-between px-4 py-3 text-left"
+    <div className="flex w-[300px] flex-col border-l border-[#e2e6ea] bg-white">
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="flex items-center justify-between border-b border-[#e2e6ea] px-4 py-3 text-left"
+      >
+        <span className="text-sm font-semibold text-[#1a2332]">What you&apos;re looking at</span>
+        <svg
+          className={`h-4 w-4 text-[#8b95a5] transition-transform ${collapsed ? "-rotate-90" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
         >
-          <span className="text-sm font-semibold text-[#1a2332]">What you&apos;re looking at</span>
-          <svg
-            className={`h-4 w-4 text-[#8b95a5] transition-transform ${collapsed ? "-rotate-90" : ""}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
 
-        {!collapsed && (
-          <div className="border-t border-[#e2e6ea] px-4 pb-4 pt-3">
-            <p className="text-xs leading-relaxed text-[#5a6577]">
-              This is a <strong className="text-[#1a2332]">regulated manufacturing workflow</strong>. Each card is a document or system in the quality management chain. The lines between them show dependencies — if one changes, the connected ones may need updating too.
+      {!collapsed && (
+        <div className="flex-1 overflow-y-auto px-4 pb-4 pt-3">
+          <p className="text-xs leading-relaxed text-[#5a6577]">
+            This is a <strong className="text-[#1a2332]">regulated manufacturing workflow</strong>. Each card is a document or system. Lines show dependencies — if one changes, connected ones may need updating.
+          </p>
+
+          <div className="mt-3 border-t border-[#e2e6ea] pt-3">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+              Node types
             </p>
-
-            <div className="mt-3 border-t border-[#e2e6ea] pt-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
-                Node types
-              </p>
-              <div className="mt-2 space-y-1.5">
-                {Object.values(NodeType).map((type) => {
-                  const config = NODE_CONFIGS[type];
-                  return (
-                    <GuideRow key={type} nodeType={type} color={config.borderColor} label={config.label} description={config.description} />
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="mt-3 border-t border-[#e2e6ea] pt-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
-                Connections
-              </p>
-              <div className="mt-2 grid grid-cols-[80px_1fr] items-center gap-x-3">
-                <svg className="h-3 w-full" viewBox="0 0 80 12" preserveAspectRatio="none">
-                  <line x1="0" y1="6" x2="80" y2="6" stroke="#c8cdd4" strokeWidth="1.5" />
-                </svg>
-                <span className="text-xs leading-snug text-[#5a6577]">
-                  A dependency — one document relies on or feeds into another
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-3 border-t border-[#e2e6ea] pt-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
-                Try it
-              </p>
-              <p className="mt-1.5 text-xs leading-relaxed text-[#5a6577]">
-                Click any <strong className="text-[#1a3a6b]">Process Step</strong> node to simulate a change and watch the impact cascade through the system.
-              </p>
+            <div className="mt-2 space-y-1">
+              {Object.values(NodeType).map((type) => {
+                const config = NODE_CONFIGS[type];
+                return (
+                  <div key={type} className="flex items-center gap-2 rounded py-1">
+                    <span className="h-4 w-[3px] shrink-0 rounded-full" style={{ backgroundColor: config.borderColor }} />
+                    <NodeIcon type={type} className="h-3 w-3 shrink-0" style={{ color: config.borderColor }} />
+                    <span className="text-[11px] font-semibold text-[#1a2332]">{config.label}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
-function GuideRow({ nodeType, color, label, description }: { nodeType: NodeType; color: string; label: string; description: string }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div className="flex w-[110px] shrink-0 items-center gap-1.5">
-        <span className="flex h-4 w-[3px] shrink-0 rounded-full" style={{ backgroundColor: color }} />
-        <NodeIcon type={nodeType} className="h-3 w-3 shrink-0" />
-        <span className="text-[11px] font-semibold text-[#1a2332]">{label}</span>
-      </div>
-      <span className="text-[11px] leading-snug text-[#5a6577]">{description}</span>
+          <div className="mt-3 border-t border-[#e2e6ea] pt-3">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+              Connections
+            </p>
+            <div className="mt-2 flex items-center gap-2">
+              <svg className="h-3 w-12 shrink-0" viewBox="0 0 48 12" preserveAspectRatio="none">
+                <line x1="0" y1="6" x2="48" y2="6" stroke="#c8cdd4" strokeWidth="1.5" />
+              </svg>
+              <span className="text-[11px] leading-snug text-[#5a6577]">
+                A dependency between documents
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-3 border-t border-[#e2e6ea] pt-3">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#8b95a5]">
+              Try it
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-[#5a6577]">
+              Click any <strong className="text-[#1a3a6b]">Process Step</strong> node to simulate a change.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
