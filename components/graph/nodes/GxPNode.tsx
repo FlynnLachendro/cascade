@@ -53,10 +53,10 @@ function GxPNodeComponent({ data, selected }: NodeProps<GxPNodeType>) {
         className="!h-2.5 !w-2.5 !border-2 !border-white !bg-[#c8cdd4]"
       />
 
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2.5">
         <NodeIcon
           type={data.nodeType}
-          className="mt-0.5 h-3.5 w-3.5 shrink-0"
+          className="mt-0.5 h-5 w-5 shrink-0"
           style={{ color: config.borderColor }}
         />
         <div className="min-w-0 flex-1">
