@@ -406,6 +406,7 @@ export function CascadeCanvas({
           <Background color="#dde0e4" gap={24} size={1} />
           <Controls
             showInteractive={false}
+            position="top-right"
             className="!border-[#e2e6ea] !bg-white !shadow-sm"
           />
         </ReactFlow>
@@ -474,7 +475,7 @@ function SimulationLegend() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="absolute bottom-28 left-3 z-20 w-[260px]">
+    <div className="absolute left-3 top-4 z-20 w-[260px]">
       <div className="rounded-lg border border-[#e2e6ea] bg-white/95 shadow-sm backdrop-blur-sm">
         <button
           onClick={() => setCollapsed(!collapsed)}
