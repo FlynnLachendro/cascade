@@ -1,6 +1,6 @@
 "use client";
 
-import { BaseEdge, getStraightPath, type EdgeProps } from "@xyflow/react";
+import { BaseEdge, getBezierPath, type EdgeProps } from "@xyflow/react";
 
 interface CascadeEdgeData {
   animated?: boolean;
@@ -14,13 +14,17 @@ export function CascadeEdge({
   sourceY,
   targetX,
   targetY,
+  sourcePosition,
+  targetPosition,
   data,
 }: EdgeProps & { data?: CascadeEdgeData }) {
-  const [edgePath] = getStraightPath({
+  const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
+    sourcePosition,
+    targetPosition,
   });
 
   const isAnimated = data?.animated;

@@ -43,6 +43,7 @@ function EditorContent() {
         id: n.id,
         type: "gxp",
         position: { x: n.positionX, y: n.positionY },
+        zIndex: 1,
         data: {
           label: n.label,
           description: n.description,

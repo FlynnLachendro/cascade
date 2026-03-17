@@ -107,6 +107,7 @@ export function CascadeCanvas({
         id: generateId(),
         type: "gxp",
         position,
+        zIndex: 1,
         data: {
           label: `New ${config.label}`,
           description: "",
@@ -408,6 +409,7 @@ export function CascadeCanvas({
           fitView
           fitViewOptions={{ padding: 0.15 }}
           deleteKeyCode={["Backspace", "Delete"]}
+          elevateNodesOnSelect
           className="bg-[#f4f5f7]"
         >
           <Background color="#dde0e4" gap={24} size={1} />
