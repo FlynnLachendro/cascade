@@ -518,10 +518,13 @@ function GraphGuide() {
               {Object.values(NodeType).map((type) => {
                 const config = NODE_CONFIGS[type];
                 return (
-                  <div key={type} className="flex items-center gap-2 rounded py-1">
-                    <span className="h-4 w-[3px] shrink-0 rounded-full" style={{ backgroundColor: config.borderColor }} />
+                  <div
+                    key={type}
+                    className="flex items-center gap-2 rounded-md border border-[#e2e6ea] px-2 py-1.5"
+                    style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2, backgroundColor: `${config.borderColor}14` }}
+                  >
                     <NodeIcon type={type} className="h-3 w-3 shrink-0" style={{ color: config.borderColor }} />
-                    <span className="text-[11px] font-semibold text-[#1a2332]">{config.label}</span>
+                    <span className="text-[11px] font-semibold" style={{ color: config.borderColor }}>{config.label}</span>
                   </div>
                 );
               })}

@@ -31,7 +31,7 @@ export function NodeSidebar() {
               style={{ borderLeftColor: config.borderColor, borderLeftWidth: 2, backgroundColor: `${config.borderColor}14` }}
             >
               <NodeIcon type={type} className="h-3.5 w-3.5" style={{ color: config.borderColor }} />
-              <span className="text-xs font-medium text-[#1a2332]">
+              <span className="text-xs font-semibold" style={{ color: config.borderColor }}>
                 {config.label}
               </span>
             </div>
